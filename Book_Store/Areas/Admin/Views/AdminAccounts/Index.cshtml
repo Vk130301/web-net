@@ -1,0 +1,191 @@
+@using PagedList.Core.Mvc
+@model PagedList.Core.IPagedList<Book_Store.Models.Account>
+
+@{
+    int CurrentPage = ViewBag.CurrentPage;
+    ViewData["Title"] = "Danh sách tài khoản quản trị";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="page-header">
+    <div class="header-sub-title">
+        <nav class="breadcrumb breadcrumb-dash">
+            <a asp-area="Admin" asp-controller="Home" asp-action="Index" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>Trang chủ</a>
+            <span class="breadcrumb-item active">Danh sách tài khoản</span>
+        </nav>
+    </div>
+</div>
+<div class="card">
+    <div class="card-body">
+        <div class="row m-b-30">
+            <div class="col-lg-8">
+                <a class="btn btn-primary" asp-area="Admin" asp-controller="AdminAccounts" asp-action="Create"><i class="anticon anticon-plus-circle m-r-5"></i><span>Tạo mới tài khoản</span></a>
+            </div>
+            <div class="col-lg-4 text-right">
+            </div>
+        </div>
+        <div class="row m-b-30">
+            <div class="col-lg-12">
+                <div class="d-md-flex">
+                    <div class="m-b-10 m-r-15">
+                        <select class="custom-select" id="txtRoleID" name="txtRoleID" style="min-width: 200px;" asp-items="ViewBag.QuyenTruyCap">
+                            <option disabled selected>Chọn quyền truy cập</option>
+                            <option value="0">Chọn tất cả</option>
+                        </select>
+
+                    </div>
+                    <div class="m-b-10">
+                        <select class="custom-select" id="txtActive" name="txtActive" style="min-width: 200px;" asp-items="ViewBag.lsStatus">
+                            <option disabled selected>Chọn trạng thái</option>
+                            <option value="0">Chọn tất cả</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover e-commerce-table">
+                <thead>
+                    <tr>
+
+                        <th>ID</th>
+                        <th>Họ và tên</th>
+                        <th>Email</th>
+                        <th>Điện thoại</th>
+                        <th>Lần đăng nhập cuối</th>
+                        <th>Quyền truy cập</th>
+                        <th>Trạng thái</th>
+                        <th>#</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null)
+                    {
+                        foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @item.AccountId
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <img class="img-fluid rounded" src="assets/images/others/thumb-9.jpg" style="max-width: 60px" alt="">
+                                        <h6 class="m-b-0 m-l-10">@item.FullName</h6>
+                                    </div>
+                                </td>
+                                <td>@item.Email</td>
+                                <td>@item.Phone</td>
+                                <td>@item.LastLogin</td>
+                                <td>@item.Role.Description</td>
+                                <td>
+                                    @if (item.Active)
+                                    {
+                                        <div class="d-flex align-items-center">
+                                            <div class="badge badge-success badge-dot m-r-10"></div>
+                                            <div>Active</div>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="d-flex align-items-center">
+                                            <div class="badge badge-danger badge-dot m-r-10"></div>
+                                            <div>Disable</div>
+                                        </div>
+                                    }
+                                </td>
+                                <td>
+                                    <a class="btn btn-primary btn-tone m-r-5" asp-area="Admin" asp-controller="AdminAccounts" asp-action="Details" asp-route-id="@item.AccountId">View</a>
+                                    <a class="btn btn-success btn-tone m-r-5" asp-area="Admin" asp-controller="AdminAccounts" asp-action="Delete" asp-route-id="@item.AccountId">Delete</a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+            <div aria-label="Page navigation example">
+                <ul class="pagination">
+                    <pager class="pager-container" list="@Model" asp-area="Admin" asp-controller="AdminAccounts" asp-route-RoleID="@ViewBag.CurrentRoleID" asp-route-Active="@ViewBag.CurrentActive" asp-action="Index" />
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            function GetUrlParameter(sParam) {
+                var sPageURL = window.location.search.substring(1);
+                var sURLVariables = sPageURL.split('&')
+                for (var i = 0; i < sURLVariables.length; i++) 
+                {
+                    var sParameterName = sURLVariables[i].split('=');
+                    if (sParameterName[0] == sParam) {
+                        return sParameterName[1];
+                    }
+                }
+            }
+            jQuery("#txtRoleID").change(function () {
+                var roleID = jQuery(this).children(":selected").attr("value");
+                roleID = parseFloat(roleID);
+                $('#txtRoleID option')
+                    .removeAttr('selected');
+                $("#txtRoleID > [value=" + roleID + "]").attr("selected", "true");
+
+                var idactive = $('#txtActive option:selected').attr("id");
+                if (idactive === undefined) idactive = GetUrlParameter("Active")
+
+                $.ajax({
+                    url: '/Admin/AdminAccounts/Filter',
+                    datatype: "json",
+                    type: "GET",
+                    data: {
+                        Active: idactive,
+                        RoleID: roleID
+                    },
+                    async: true,
+                    success: function (results) {
+                        if (results.status == "success") {
+                            window.location.href = results.redirectUrl;
+                        }
+                    },
+                    error: function (xhr) {
+                        alert('error');
+                    }
+                });
+            });
+
+            jQuery("#txtActive").change(function () {
+                var idactive = jQuery(this).children(":selected").attr("value");
+                $('#txtActive option')
+                    .removeAttr('selected');
+                $("#txtActive > [value=" + idactive + "]").attr("selected", "true");
+
+                var roleID = $('#txtRoleID option:selected').attr("id");
+                if (roleID === undefined) roleID = GetUrlParameter("roleID")
+
+                $.ajax({
+                    url: '/Admin/AdminAccounts/Filter',
+                    datatype: "json",
+                    type: "GET",
+                    data: {
+                        Active: idactive,
+                        RoleID: roleID
+                    },
+                    async: true,
+                    success: function (results) {
+                        if (results.status == "success") {
+                            window.location.href = results.redirectUrl;
+                        }
+                    },
+                    error: function (xhr) {
+                        alert('error');
+                    }
+                });
+            });
+        });
+    </script>
+
+}

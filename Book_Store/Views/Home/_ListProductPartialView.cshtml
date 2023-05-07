@@ -1,0 +1,50 @@
+﻿@model List<Product>
+@if (Model != null && Model.Count() > 0)
+{
+    <div class="product-item-wrap row">
+        @foreach (var item in Model)
+        {
+            string url = $"/{item.Alias}-{item.ProductId}.html";
+            <div class="col-xl-3 col-lg-4 col-sm-6">
+                <div class="product-item">
+                    <div class="product-img img-zoom-effect">
+                        <a href="@url">
+                            <img width="200" height="200" class="img-full" src="~/images/products/@item.Thumb" alt="@item.Title">
+                        </a>
+                        <div class="product-add-action">
+                            <ul>
+                                <li>
+                                    <a href="cart.html">
+                                        <i class="pe-7s-cart"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="product-content">
+                        <a class="product-name" href="@url">@item.ProductName</a>
+                        <div class="price-box pb-1">
+                            <span class="new-price">
+                                @{
+                                    double price1 = item.Price.Value;
+                                    double discount1 = item.Discount.Value;
+                                    @if (item.Discount > 0)
+                                    {
+                                        double discountedPrice = price1 - (price1 * discount1 / 100);
+                                        double roundedPrice = Math.Round(discountedPrice, 0, MidpointRounding.AwayFromZero);
+                                        <span>@roundedPrice.ToString("#,##0") VNĐ</span>
+                                    }
+                                    else
+                                    {
+                                        <span>@item.Price.Value.ToString("#,##0") VNĐ</span>
+                                    }
+                                }
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+    </div>
+}

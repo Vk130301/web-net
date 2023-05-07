@@ -1,0 +1,117 @@
+@model Book_Store.ModelViews.LoginViewModel
+
+@{ ViewData["Title"] = "Đăng nhập tài khoản";
+                Layout = "~/Views/Shared/_Layout.cshtml"; }
+
+<main class="main-content">
+    <div class="login-register-area section-space-y-axis-100">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 pt-10 pt-lg-0">
+                    <form method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="login-form">
+                            <h4 class="login-title">Đăng nhập</h4>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label>Địa chỉ Email</label>
+                                    <input type="email" asp-for="UserName" placeholder="Địa chỉ Email">
+                                    <span asp-validation-for="UserName" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-12">
+                                    <label>Mật khẩu</label>
+                                    <input type="password" asp-for="Password" placeholder="Mật khẩu">
+                                    <span asp-validation-for="Password" class="text-danger"></span>
+                                </div>
+                                
+                                <div class="col-12">
+                                    <button class="btn btn-custom-size lg-size btn-secondary btn-primary-hover rounded-0">Đăng nhập</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+
+            function loadHeaderCart() {
+                $('#miniCart').load("/AjaxContent/HeaderCart");
+                $('#numberCart').load("/AjaxContent/NumberCart");
+            }
+            $("form").submit(function (event) {
+                event.preventDefault(); // Ngăn chặn form gửi yêu cầu đi
+                var username = $('input[name="UserName"]').val();
+                var password = $('input[name="Password"]').val();
+                var isValid = true;
+                if (username == '') {
+                    $('span[data-valmsg-for="UserName"]').text('Vui lòng nhập địa chỉ email.');
+                    isValid = false;
+                } else {
+                    $('span[data-valmsg-for="UserName"]').text('');
+                }
+                if (password == '') {
+                    $('span[data-valmsg-for="Password"]').text('Vui lòng nhập mật khẩu.');
+                    isValid = false;
+                } else if (password.length < 5) {
+                    $('span[data-valmsg-for="Password"]').text('Mật khẩu phải chứa ít nhất 5 ký tự.');
+                    isValid = false;
+                } else {
+                    $('span[data-valmsg-for="Password"]').text('');
+                }
+                if (isValid) {
+                    var formData = $(this).serialize(); // Lấy dữ liệu form
+                    $.post("/api/login", formData)
+                        .done(function (data) {
+                            // Nếu đăng nhập thành công, thực hiện yêu cầu AJAX để lấy customerId
+                            $.get('api/getcustomerId', function (result) {
+                                // Lấy customerId từ phản hồi
+                                var customerId = result.customerID;
+                                var gioHang = JSON.parse(localStorage.getItem(customerId));
+                                var productid = [];
+                                var soLuong = [];
+
+                                for (var i = 0; i < gioHang.length; i++) {
+                                    productid.push(gioHang[i].product.productId.toString());
+                                    soLuong.push(gioHang[i].amount.toString());
+                                }
+                                $.ajax({
+                                    url: 'api/cart/checklogin',
+                                    type: "POST",
+                                    dataType: "JSON",
+                                    data: {
+                                        productID: productid,
+                                        amount: soLuong
+                                    },
+                                    success: function (response) {
+                                        if (response.success) {
+                                            loadHeaderCart();//Reload lai gio hang
+                                        }
+                                        setTimeout(function () {
+                                            window.location.href = data.url;
+                                        }, 1000)
+                     
+                                    },
+                                    error: function (error) {
+                                        alert("There was an error posting the data to the server: " + error.responseText);
+                                    }
+                                });
+                            });
+                            setTimeout(function () {
+                                window.location.href = data.url;
+                            }, 1000)
+                        })
+                        .fail(function (jqXHR, textStatus, error) {
+                            // Hiển thị thông báo lỗi cho người dùng
+                            var errorMessage = jqXHR.responseJSON.error;
+                            alert(errorMessage);
+                        });
+                }
+            });
+        })
+    </script>
+}

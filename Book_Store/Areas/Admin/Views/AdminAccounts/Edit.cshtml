@@ -1,0 +1,11 @@
+@model Book_Store.Models.Account
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    Book_Store.Areas.Admin.Models.ChangePasswordViewModel changePassword = new Book_Store.Areas.Admin.Models.ChangePasswordViewModel();
+}
+
+<div class="tab-pane fade" id="account-details" role="tabpanel" aria-labelledby="account-details-tab">
+    @await Html.PartialAsync("_ChangePasswordPartialView", changePassword)
+</div>
