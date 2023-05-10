@@ -120,7 +120,6 @@ namespace Book_Store.Controllers
                         await _context.SaveChangesAsync();
                         //Lưu Session MaKh
                         HttpContext.Session.SetString("CustomerId", khachhang.CustomerId.ToString());
-                        var taikhoanID = HttpContext.Session.GetString("CustomerId");
 
                         //Identity
                         var claims = new List<Claim>
@@ -184,7 +183,7 @@ namespace Book_Store.Controllers
                     string pass = (customer.Password + khachhang.Salt.Trim()).ToMD5();
                     if(khachhang.Password != pass)
                     {
-                        _toastNotification.AddErrorToastMessage("Thông tin đăng nhập chưa chính xác");
+                        _toastNotification.AddErrorToastMessage("Sai mật khẩu");
                         return BadRequest();
                     }
                     //kiem tra xem account co bi disable hay khong
@@ -240,10 +239,6 @@ namespace Book_Store.Controllers
             try
             {
                 var taikhoanID = HttpContext.Session.GetString("CustomerId");
-                if (taikhoanID == null)
-                {
-                    return RedirectToAction("Login", "Accounts");
-                }
                 if (ModelState.IsValid)
                 {
                     var taikhoan = _context.Customers.Find(Convert.ToInt32(taikhoanID));

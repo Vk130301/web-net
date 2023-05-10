@@ -10,6 +10,8 @@ using NToastNotify;
 using PagedList.Core;
 using Book_Store.Helpper;
 using Book_Store.Areas.Admin.Models.Authentication;
+using Book_Store.Areas.Admin.Models;
+using Book_Store.Controllers;
 
 namespace Book_Store.Areas.Admin.Controllers
 {

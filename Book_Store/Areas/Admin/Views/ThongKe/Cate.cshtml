@@ -1,0 +1,294 @@
+﻿@{
+    ViewData["Title"] = "Cate";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<form autocomplete="off">
+    <div class="row m-b-30">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="input-affix m-v-10">
+                    Từ ngày: <input type="text" id="datepicker" class="form-control ">
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="input-affix m-v-10">
+                    Đến ngày: <input type="text" id="datepicker1" class="form-control datepicker">
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="input-affix m-v-10">
+                    <input type="button" id="btn-dashboard-filter" class="btn btn-primary btn-sm" value="Lọc kết quả">
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="input-affix m-v-10">
+                    Lọc theo:
+                    <select class="dashboard-filter form-control" style="min-width: 200px;">
+                        <option>--Chọn--</option>
+                        <option value="today">Hôm nay</option>
+                        <option value="7ngay">Tuần trước</option>
+                        <option value="thangtruoc">Tháng trước</option>
+                        <option value="thangnay">Tháng này</option>
+                        <option value="namtruoc">Năm ngoái</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-bordered">
+            <thread>
+                <tr>
+                    <th>#</th>
+                    <th>Ngày</th>
+                    <th>Danh Mục</th>
+                    <th>Tên Sản Phẩm</th>
+                    <th>Số lượng bán</th>
+                </tr>
+            </thread>
+            <tbody id="load_data"></tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="~/adminassets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
+    <script>
+        var myChart = null;
+        $(function () {
+            var dateMap = new Map();
+            var arrDate = [];
+            var arrDanhMuc = [];
+            var arrSanPham = [];
+            var arrTotalAmounts = [];
+
+            $.ajax({
+                url: '/Admin/ThongKe/GetStatisticalCate',
+                type: 'GET',
+                data: { fromDate: '', toDate: '' },
+                success: function (rs) {
+
+                    load_data(rs.data);
+
+                },
+                error: function (xhr, status, error) {
+                    // xử lý lỗi, ví dụ hiển thị thông báo lỗi
+                    alert('Lỗi: ' + error);
+                }
+
+            });
+
+            $('#datepicker').datepicker({
+                format: "dd/mm/yyyy",
+                autoclose: true
+            });
+            $('#datepicker1').datepicker({
+                format: "dd/mm/yyyy",
+                autoclose: true
+            });
+            $("#btn-dashboard-filter").on("click", function () {
+                var from_Date = $("#datepicker").val();
+                var to_Date = $("#datepicker1").val();
+
+                if (!from_Date || !to_Date) {
+                    alert('Vui lòng nhập đầy đủ thời gian!');
+                    return;
+                }
+
+                $.ajax({
+                    url: "/Admin/ThongKe/GetStatisticalCate",
+                    type: "GET",
+                    data: { from_Date: from_Date, to_Date: to_Date },
+
+                    success: function (result) {
+                        // Lọc kết quả theo khoảng ngày từ fromDate đến toDate
+                        var filteredResult = result.data.filter(function (item) {
+                            var itemDate = new Date(item.date.split("/").reverse().join("-"));
+                            var from = new Date(from_Date.split("/").reverse().join("-"));
+                            var to = new Date(to_Date.split("/").reverse().join("-"));
+                            return itemDate >= from && itemDate <= to;
+                        });
+                        // Tạo mảng các giá trị cần thiết cho biểu đồ từ kết quả lọc được
+                        var arrDate = [];
+                        var arrDanhMuc = [];
+                        var arrSanPham = [];
+                        var arrTotalAmounts = [];
+
+                        filteredResult.forEach(function (item) {
+                            var index = arrDate.indexOf(item.date);
+                            arrDate.push(item.date);
+                            arrDanhMuc.push(item.danhMuc);
+                            arrSanPham.push(item.tenSanPham);
+                            arrTotalAmounts.push(item.totalAmount);
+                        });
+
+                        //// Cập nhật dữ liệu cho biểu đồ
+                        //if (myChart) {
+                        //    myChart.data.labels = arrDate;
+                        //    myChart.data.datasets[0].data = arrDoanhthu;
+                        //    myChart.data.datasets[1].data = arrLoiNhuan;
+                        //    myChart.update();
+                        //} else {
+                        //    var ctx = document.getElementById("myChart").getContext("2d");
+                        //    myChart = new Chart(ctx, {
+                        //        type: 'bar',
+                        //        data: {
+                        //            labels: arrDate,
+                        //            datasets: [{
+                        //                label: 'Doanh thu',
+                        //                data: arrDoanhthu,
+                        //                backgroundColor: "rgba(255, 99, 132, 0.2)",
+                        //                borderColor: "rgba(255,99,132,1)",
+                        //                borderWidth: 1
+                        //            }, {
+                        //                label: 'Lợi nhuận',
+                        //                data: arrLoiNhuan,
+                        //                backgroundColor: "rgba(75, 192, 192, 0.2)",
+                        //                borderColor: "rgba(75, 192, 192, 1)",
+                        //                borderWidth: 1
+                        //            }]
+                        //        },
+                        //        options: {
+                        //            scales: {
+                        //                yAxes: [{
+                        //                    ticks: {
+                        //                        beginAtZero: true,
+                        //                        callback: function (value, index, values) {
+                        //                            return value.toLocaleString();   // Format giá trị đếm
+                        //                        }
+                        //                    }
+                        //                }]
+                        //            }
+                        //        }
+                        //    });
+                        //}
+                        load_data(filteredResult);
+                    },
+                    error: function () {
+                        // Xử lý lỗi nếu có
+                    }
+                });
+            });
+            $('.dashboard-filter').change(function () {
+                // Lấy giá trị filter đã chọn
+                var filter = $(this).val();
+                // Tính toán ngày bắt đầu và kết thúc dựa trên giá trị filter
+                var fromDate1 = '';
+                var toDate1 = '';
+                var now = moment().startOf('day');
+                switch (filter) {
+                    case 'today':
+                        fromDate1 = now.format('DD/MM/YYYY');
+                        toDate1 = now.format('DD/MM/YYYY');
+                        break;
+                    case '7ngay':
+                        fromDate1 = now.clone().subtract(1, 'week').startOf('week').format('DD/MM/YYYY');
+                        toDate1 = now.clone().subtract(1, 'week').endOf('week').format('DD/MM/YYYY');
+                        break;
+                    case 'thangtruoc':
+                        fromDate1 = now.clone().subtract(1, 'M').startOf('month').format('DD/MM/YYYY');
+                        toDate1 = now.clone().subtract(1, 'M').endOf('month').format('DD/MM/YYYY');
+                        break;
+                    case 'thangnay':
+                        fromDate1 = now.clone().startOf('month').format('DD/MM/YYYY');
+                        toDate1 = now.clone().endOf('month').format('DD/MM/YYYY');
+                        break;
+                    case 'namtruoc':
+                        fromDate1 = now.clone().subtract(1, 'y').startOf('year').format('DD/MM/YYYY');
+                        toDate1 = now.clone().subtract(1, 'y').endOf('year').format('DD/MM/YYYY');
+                        break;
+                }
+                $.ajax({
+                    url: '/Admin/ThongKe/GetStatisticalCate',
+                    type: 'GET',
+                    data: { fromDate1: fromDate1, toDate1: toDate1 },
+                    success: function (response) {
+                        // Tạo dữ liệu biểu đồ từ dữ liệu tải v
+                        // Lọc kết quả theo khoảng ngày từ fromDate đến toDate
+                        var filteredResult1 = response.data.filter(function (item) {
+                            var itemDate = new Date(item.date.split("/").reverse().join("-"));
+                            var from = new Date(fromDate1.split("/").reverse().join("-"));
+                            var to = new Date(toDate1.split("/").reverse().join("-"));
+                            return itemDate >= from && itemDate <= to;
+                        });
+
+                        filteredResult1.forEach(function (item) {
+                            var index = arrDate.indexOf(item.date);
+                            arrDate.push(item.date);
+                            arrDanhMuc.push(item.danhMuc);
+                            arrSanPham.push(item.tenSanPham);
+                            arrTotalAmounts.push(item.totalAmount);
+                        });
+
+                        //// Cập nhật biểu đồ
+                        //if (myChart) {
+                        //    myChart.data.labels = arrDate;
+                        //    myChart.data.datasets[0].data = arrDoanhthu;
+                        //    myChart.data.datasets[1].data = arrLoiNhuan;
+                        //    myChart.update();
+                        //} else {
+                        //    var ctx = document.getElementById("myChart").getContext("2d");
+                        //    myChart = new Chart(ctx, {
+                        //        type: 'bar',
+                        //        data: {
+                        //            labels: arrDate,
+                        //            datasets: [{
+                        //                label: 'Doanh thu',
+                        //                data: arrDoanhthu,
+                        //                backgroundColor: "rgba(255, 99, 132, 0.2)",
+                        //                borderColor: "rgba(255,99,132,1)",
+                        //                borderWidth: 1
+                        //            }, {
+                        //                label: 'Lợi nhuận',
+                        //                data: arrLoiNhuan,
+                        //                backgroundColor: "rgba(75, 192, 192, 0.2)",
+                        //                borderColor: "rgba(75, 192, 192, 1)",
+                        //                borderWidth: 1
+                        //            }]
+                        //        },
+                        //        options: {
+                        //            scales: {
+                        //                yAxes: [{
+                        //                    ticks: {
+                        //                        beginAtZero: true,
+                        //                        callback: function (value, index, values) {
+                        //                            return value.toLocaleString();   // Format giá trị đếm
+                        //                        }
+                        //                    }
+                        //                }]
+                        //            }
+                        //        }
+                        //    });
+                        //}
+                        load_data(filteredResult1);
+                    },
+                    error: function (xhr, status, error) {
+                        alert('Lỗi: ' + error);
+                    }
+                });
+
+            });
+
+            function load_data(data) {
+                var strHtml = "";
+                $.each(data, function (i, item) {
+                    strHtml += "<tr>";
+                    strHtml += "<td>" + (i + 1) + "</td>";
+                    strHtml += "<td>" + item.date + "</td>";
+                    strHtml += "<td>" + item.danhMuc + "</td>";
+                    strHtml += "<td>" + item.tenSanPham + "</td>";
+                    strHtml += "<td>" + item.totalAmount + "</td>";
+                    strHtml += "</tr>";
+                });
+                $("#load_data").html(strHtml);
+            }
+        });
+
+    </script>
+
+}

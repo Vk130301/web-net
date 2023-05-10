@@ -16,6 +16,23 @@
             </td>
             <td>@item.Cate.CateName</td>
             <td>@item.Price.Value.ToString("#,##0") VNĐ</td>
+            <td>@item.Discount%</td>
+            <td>
+                @{
+                    double price = item.Price.Value;
+                    double discount = item.Discount.Value; ;
+                    @if (item.Discount > 0)
+                    {
+                        double discountedPrice = price - (price * discount / 100);
+                        double roundedPrice = Math.Round(discountedPrice, 0, MidpointRounding.AwayFromZero);
+                        <div>@roundedPrice.ToString("#,##0") VNĐ</div>
+                    }
+                    else
+                    {
+                        <div>@item.Price.Value.ToString("#,##0") VNĐ</div>
+                    }
+                }
+            </td>
             <td>@item.UnitslnStock</td>
             <td>
                 @if (item.UnitslnStock.Value > 0)
@@ -23,18 +40,20 @@
                     <div class="d-flex align-items-center">
                         <div class="badge badge-success badge-dot m-r-10"></div>
                         <div>Còn hàng</div>
-                    </div> }
+                    </div>
+                }
                 else
                 {
                     <div class="d-flex align-items-center">
-                        <div class="badge badge-success badge-dot m-r-10"></div>
+                        <div class="badge badge-danger badge-dot m-r-10"></div>
                         <div>Hết hàng</div>
-                    </div>}
-                </td>
+                    </div>
+                }
+
             <td>
-                <a class="btn btn-primary btn-tone m-r-5" asp-area="Admin" asp-controller="AdminProducts" asp-action="Details" asp-route-id="@item.ProductId">Chi tiết</a>
-                <a class="btn btn-secondary btn-tone m-r-5" asp-area="Admin" asp-controller="AdminProducts" asp-action="Edit" asp-route-id="@item.ProductId">Sửa</a>
-                <a class="btn btn-success btn-tone m-r-5" asp-area="Admin" asp-controller="AdminProducts" asp-action="Delete" asp-route-id="@item.ProductId">Xóa</a>
+                <a class="btn btn-primary btn-tone m-r-5" asp-area="Admin" asp-controller="AdminProducts" asp-action="Details" asp-route-id="@item.ProductId">View</a>
+                <a class="btn btn-secondary btn-tone m-r-5" asp-area="Admin" asp-controller="AdminProducts" asp-action="Edit" asp-route-id="@item.ProductId">Edit</a>
+                <a class="btn btn-success btn-tone m-r-5" asp-area="Admin" asp-controller="AdminProducts" asp-action="Delete" asp-route-id="@item.ProductId">Delete</a>
 
             </td>
         </tr>

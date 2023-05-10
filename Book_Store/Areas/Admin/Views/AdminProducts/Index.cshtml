@@ -45,6 +45,7 @@
             <table class="table table-hover e-commerce-table">
                 <thead>
                     <tr>
+                        <th><input type="checkbox" id="selectAll"></th>
                         <th>ID</th>
                         <th>Tên sản phẩm</th>
                         <th>Danh mục</th>
@@ -53,24 +54,27 @@
                         <th>Giá bán</th>
                         <th>Tồn kho</th>
                         <th>Trạng thái</th>
+                        <th>
+                            <button id="editSelected" class="btn btn-secondary btn-tone m-r-5" asp-area="Admin" asp-controller="AdminProducts" asp-action="EditAll">Edit Selected Products</button>
+                        </th>
                         <th></th>
                     </tr>
                 </thead>
                 <tbody id="records_table">
                     @if (Model != null)
                     {
+                                               
                         foreach (var item in Model)
                         {
                             <tr>
-
+                                <td>
+                                    <input type="checkbox" name="selectedProducts" value="@item.ProductId" />
+                                </td>
                                 <td>
                                     @item.ProductId
                                 </td>
                                 <td>
-                                    <div class="d-flex align-items-center">
-                                        <img class="img-fluid rounded" src="assets/images/others/thumb-9.jpg" style="max-width: 60px" alt="">
-                                        <h6 class="m-b-0 m-l-10">@item.ProductName</h6>
-                                    </div>
+                                       @item.ProductName
                                 </td>
                                 <td>@item.Cate.CateName</td>
                                 <td>@item.Price.Value.ToString("#,##0") VNĐ</td>
@@ -106,19 +110,20 @@
                                             <div>Hết hàng</div>
                                         </div>
                                     }
-
                                 <td>
                                     <a class="btn btn-primary btn-tone m-r-5" asp-area="Admin" asp-controller="AdminProducts" asp-action="Details" asp-route-id="@item.ProductId">View</a>
                                     <a class="btn btn-secondary btn-tone m-r-5" asp-area="Admin" asp-controller="AdminProducts" asp-action="Edit" asp-route-id="@item.ProductId">Edit</a>
                                     <a class="btn btn-success btn-tone m-r-5" asp-area="Admin" asp-controller="AdminProducts" asp-action="Delete" asp-route-id="@item.ProductId">Delete</a>
-
                                 </td>
+                               
                             </tr>
+
                         }
                     }
 
 
                 </tbody>
+
             </table>
             <div aria-label="Page navigation example">
                 <ul class="pagination">
@@ -144,7 +149,7 @@
                     type: "GET",
                     data: {
                         CateID: cateID
-                    },
+                    },  
                     async: true,
                     success: function (results) {
                         if (results.status == "success") {
@@ -175,6 +180,46 @@
                 });
             });
         });
+
+        const selectAllCheckbox = document.getElementById('selectAll');
+        const checkboxes = document.getElementsByName('selectedProducts');
+
+        selectAllCheckbox.addEventListener('click', function () {
+            checkboxes.forEach((checkbox) => {
+                checkbox.checked = selectAllCheckbox.checked;
+            });
+        });
+
+        checkboxes.forEach((checkbox) => {
+            checkbox.addEventListener('click', function () {
+                // If the clicked checkbox is not the select all checkbox
+                if (this !== selectAllCheckbox) {
+                    // If the checkbox is unchecked, uncheck the select all checkbox
+                    if (!this.checked) {
+                        selectAllCheckbox.checked = false;
+                    } else {
+                        // If all the other checkboxes are checked, check the select all checkbox
+                        const allChecked = [...checkboxes].every(c => c.checked);
+                        if (allChecked) {
+                            selectAllCheckbox.checked = true;
+                        }
+                    }
+                }
+            })
+        });
+
+        $('#editSelected').click(function () {
+            const selectedProducts = $('input[name=selectedProducts]:checked').map(function () {
+                return this.value;
+            }).get();
+
+            if (selectedProducts.length > 0) {
+                const editUrl = `/Admin/AdminProducts/EditAll?productIds=${selectedProducts.join(',')}`;
+                window.location.href = editUrl;
+            }
+        });
+            
+
     </script>
 
 }

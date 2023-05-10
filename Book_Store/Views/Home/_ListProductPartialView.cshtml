@@ -9,7 +9,18 @@
                 <div class="product-item">
                     <div class="product-img img-zoom-effect">
                         <a href="@url">
-                            <img width="200" height="200" class="img-full" src="~/images/products/@item.Thumb" alt="@item.Title">
+                            @if (item.Discount > 0)
+                            {
+                                <div style="position: relative" class="banner-img img-zoom-effect">
+                                    <img width="200" height="200" class="img-full" src="~/images/products/@item.Thumb" alt="@item.Title">
+                                    <div class="inner-content">
+                                        <h5 style="background-color:white; position:absolute; top: -100px;right: -6px;" class="offer">@item.Discount.Value.ToString("#,##0")% OFF</h5>
+                                    </div>
+                                </div>
+                            } else
+                            {
+                                <img width="200" height="200" class="img-full" src="~/images/products/@item.Thumb" alt="@item.Title">
+                            }
                         </a>
                         <div class="product-add-action">
                             <ul>
@@ -32,6 +43,7 @@
                                     {
                                         double discountedPrice = price1 - (price1 * discount1 / 100);
                                         double roundedPrice = Math.Round(discountedPrice, 0, MidpointRounding.AwayFromZero);
+                                        <span style="display:block;text-decoration: line-through; opacity:0.5">@item.Price.Value.ToString("#,##0") VNĐ</span>
                                         <span>@roundedPrice.ToString("#,##0") VNĐ</span>
                                     }
                                     else

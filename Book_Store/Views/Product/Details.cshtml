@@ -119,7 +119,7 @@
                                     else
                                     {
                                         <li>
-                                            <a href="/dang-nhap.html?returnUrl=/shop.html" class="btn btn-custom-size lg-size btn-primary btn-secondary-hover rounded-0">Thêm vào giỏ hàng</a>
+                                            <a href="/dang-nhap.html?returnUrl" class="btn btn-custom-size lg-size btn-primary btn-secondary-hover rounded-0">Thêm vào giỏ hàng</a>
                                             <input hidden asp-for="ProductId" />
                                         </li>
                                     }
@@ -444,17 +444,12 @@
                             productID: productid,
                             amount: soLuong
                         },
-                        success: function (response) {
-                            if (response.result == 'Redirect') {
-                                window.location = response.url;
-                            }
-                            else {
+                        success: function (response) {  
                                 loadHeaderCart(); //Add Product success
                                 localStorage.setItem(customerId, JSON.stringify(response.gioHang))
                                 setTimeout(function () {
                                     location.reload();
                                 }, 1000)
-                            }
                         },
                         error: function (error) {
                             alert("There was an error posting the data to the server: " + error.responseText);

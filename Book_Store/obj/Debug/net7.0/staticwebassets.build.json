@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "GuvufSBf58bK+IF1jY4z7zl/m1146RWvMaA5VnS9gFU=",
+  "Hash": "EX2WZIZZfwpGThtFdVFzTL79FNs7nwhZn7kLFdGRMGQ=",
   "Source": "Book_Store",
   "BasePath": "_content/Book_Store",
   "Mode": "Default",
@@ -17000,12 +17000,12 @@
       "OriginalItemSpec": "wwwroot\\assets\\images\\favicon.ico"
     },
     {
-      "Identity": "C:\\Users\\FShop\\source\\repos\\Book_Store\\Book_Store\\wwwroot\\assets\\images\\logo\\dark.png",
+      "Identity": "C:\\Users\\FShop\\source\\repos\\Book_Store\\Book_Store\\wwwroot\\assets\\images\\logo\\KERAS.jpg",
       "SourceId": "Book_Store",
       "SourceType": "Discovered",
       "ContentRoot": "C:\\Users\\FShop\\source\\repos\\Book_Store\\Book_Store\\wwwroot\\",
       "BasePath": "_content/Book_Store",
-      "RelativePath": "assets/images/logo/dark.png",
+      "RelativePath": "assets/images/logo/KERAS.jpg",
       "AssetKind": "All",
       "AssetMode": "All",
       "AssetRole": "Primary",
@@ -17014,7 +17014,7 @@
       "AssetTraitValue": "",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\assets\\images\\logo\\dark.png"
+      "OriginalItemSpec": "wwwroot\\assets\\images\\logo\\KERAS.jpg"
     },
     {
       "Identity": "C:\\Users\\FShop\\source\\repos\\Book_Store\\Book_Store\\wwwroot\\assets\\images\\megamenu\\slider\\1.jpg",
@@ -20143,6 +20143,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\images\\pages\\huong-dan-mua-hang.png"
+    },
+    {
+      "Identity": "C:\\Users\\FShop\\source\\repos\\Book_Store\\Book_Store\\wwwroot\\images\\products\\lieu-co-thuong-nhau-mai.jpg",
+      "SourceId": "Book_Store",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\FShop\\source\\repos\\Book_Store\\Book_Store\\wwwroot\\",
+      "BasePath": "_content/Book_Store",
+      "RelativePath": "images/products/lieu-co-thuong-nhau-mai.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\products\\lieu-co-thuong-nhau-mai.jpg"
     },
     {
       "Identity": "C:\\Users\\FShop\\source\\repos\\Book_Store\\Book_Store\\wwwroot\\images\\products\\naruto.jpg",

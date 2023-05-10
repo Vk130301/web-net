@@ -39,13 +39,29 @@
                     <span class="title">Quản lý khách hàng</span>
                 </a>
             </li>
-            <li class="nav-item">
-                <a asp-area="Admin" asp-controller="ThongKe" asp-action="Index">
+
+            <li class="nav-item dropdown">
+                <a class="dropdown-toggle" href="javascript:void(0);">
                     <span class="icon-holder">
-                        <i class="anticon anticon-file"></i>
+                        <i class="anticon anticon-table"></i>
                     </span>
-                    <span class="title">Thống Kê</span>
+                    <span class="title">Quản lý thống kê</span>
+                    <span class="arrow">
+                        <i class="arrow-icon"></i>
+                    </span>
                 </a>
+                <ul class="dropdown-menu">
+                    <li class="nav-item">
+                        <a asp-area="Admin" asp-controller="ThongKe" asp-action="Index">
+                            <span class="title">Doanh Thu, Lợi Nhuận</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a asp-area="Admin" asp-controller="ThongKe" asp-action="Cate">
+                            <span class="title">Danh mục sản phẩm bán được</span>
+                        </a>
+                    </li>
+                </ul>
             </li>
 
             <li class="nav-item dropdown">

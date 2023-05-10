@@ -3985,8 +3985,8 @@
       "PackagePath": "staticwebassets\\assets\\images\\favicon.ico"
     },
     {
-      "Id": "C:\\Users\\FShop\\source\\repos\\Book_Store\\Book_Store\\wwwroot\\assets\\images\\logo\\dark.png",
-      "PackagePath": "staticwebassets\\assets\\images\\logo\\dark.png"
+      "Id": "C:\\Users\\FShop\\source\\repos\\Book_Store\\Book_Store\\wwwroot\\assets\\images\\logo\\KERAS.jpg",
+      "PackagePath": "staticwebassets\\assets\\images\\logo\\KERAS.jpg"
     },
     {
       "Id": "C:\\Users\\FShop\\source\\repos\\Book_Store\\Book_Store\\wwwroot\\assets\\images\\megamenu\\slider\\1.jpg",
@@ -4723,6 +4723,10 @@
     {
       "Id": "C:\\Users\\FShop\\source\\repos\\Book_Store\\Book_Store\\wwwroot\\images\\pages\\huong-dan-mua-hang.png",
       "PackagePath": "staticwebassets\\images\\pages\\huong-dan-mua-hang.png"
+    },
+    {
+      "Id": "C:\\Users\\FShop\\source\\repos\\Book_Store\\Book_Store\\wwwroot\\images\\products\\lieu-co-thuong-nhau-mai.jpg",
+      "PackagePath": "staticwebassets\\images\\products\\lieu-co-thuong-nhau-mai.jpg"
     },
     {
       "Id": "C:\\Users\\FShop\\source\\repos\\Book_Store\\Book_Store\\wwwroot\\images\\products\\naruto.jpg",
