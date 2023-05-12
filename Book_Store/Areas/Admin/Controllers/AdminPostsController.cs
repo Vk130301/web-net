@@ -17,10 +17,10 @@ namespace Book_Store.Areas.Admin.Controllers
     [Authentication]
     public class AdminPostsController : Controller
     {
-        private readonly QlBansachContext _context;
+        private readonly BookManagementContext _context;
         private readonly IToastNotification _toastNotification;
 
-        public AdminPostsController(QlBansachContext context, IToastNotification toastNotification)
+        public AdminPostsController(BookManagementContext context, IToastNotification toastNotification)
         {
             _context = context;
             _toastNotification = toastNotification;

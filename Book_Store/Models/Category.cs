@@ -11,10 +11,6 @@ public partial class Category
 
     public string? Description { get; set; }
 
-    public int? ParentId { get; set; }
-
-    public int? Levels { get; set; }
-
     public int? Ordering { get; set; }
 
     public bool Published { get; set; }
@@ -28,10 +24,6 @@ public partial class Category
     public string? MetaDesc { get; set; }
 
     public string? MetaKey { get; set; }
-
-    public string? Cover { get; set; }
-
-    public string? SchemaMarkup { get; set; }
 
     public virtual ICollection<Post> Posts { get; set; } = new List<Post>();
 

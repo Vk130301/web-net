@@ -7,7 +7,7 @@ using System.Text.Encodings.Web;
 using System.Text.Unicode;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddDbContext<QlBansachContext>(option => option.UseSqlServer(
+builder.Services.AddDbContext<BookManagementContext>(option => option.UseSqlServer(
     builder.Configuration.GetConnectionString("DefaltConnectionString")
     ));
 

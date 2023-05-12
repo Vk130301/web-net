@@ -14,10 +14,10 @@ namespace Book_Store.Controllers
 {
     public class ProductController : Controller
     {
-        private readonly QlBansachContext _context;
+        private readonly BookManagementContext _context;
         private readonly IToastNotification _toastNotification;
 
-        public ProductController(QlBansachContext context, IToastNotification toastNotification)
+        public ProductController(BookManagementContext context, IToastNotification toastNotification)
         {
             _context = context;
             _toastNotification = toastNotification;
@@ -69,12 +69,35 @@ namespace Book_Store.Controllers
 
         }
 
+        [Route("tacgia/{Alias}", Name = ("ListProducts"))]
+        public IActionResult ListAuthor(string Alias, int page = 1)
+        {
+            try
+            {
+                var pageSize = 10;
+                var tacgia = _context.Authors.AsNoTracking().SingleOrDefault(x => x.Alias == Alias);
+
+                var lsTinDangs = _context.Products
+                    .AsNoTracking()
+                    .Where(x => x.AuthorId == tacgia.AuthorId)
+                    .OrderByDescending(x => x.DateCreated);
+                PagedList<Product> models = new PagedList<Product>(lsTinDangs, page, pageSize);
+                ViewBag.CurrentPage = page;
+                ViewBag.CurrentCat = tacgia;
+                return View(models);
+            }
+            catch
+            {
+                return RedirectToAction("Index", "Home");
+            }
+        }
+
         [Route("/{Alias}-{id}.html", Name = ("ProductDetails"))]
         public IActionResult Details(int id)
         {
             try
             {
-                var product = _context.Products.Include(x => x.Cate).FirstOrDefault(x => x.ProductId == id);
+                var product = _context.Products.Include(x => x.Cate).Include(x=>x.Author).FirstOrDefault(x => x.ProductId == id);
                 if (product == null)
                 {
                     return RedirectToAction("Index");

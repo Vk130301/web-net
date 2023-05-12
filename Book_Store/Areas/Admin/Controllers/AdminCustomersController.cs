@@ -15,9 +15,9 @@ namespace Book_Store.Areas.Admin.Controllers
     [Authentication]
     public class AdminCustomersController : Controller
     {
-        private readonly QlBansachContext _context;
+        private readonly BookManagementContext _context;
 
-        public AdminCustomersController(QlBansachContext context)
+        public AdminCustomersController(BookManagementContext context)
         {
             _context = context;
         }

@@ -16,10 +16,10 @@ namespace Book_Store.Controllers
 {
     public class ShoppingCartController : Controller
     {
-        private readonly QlBansachContext _context;
+        private readonly BookManagementContext _context;
         private readonly IToastNotification _toastNotification;
 
-        public ShoppingCartController(QlBansachContext context, IToastNotification toastNotification)
+        public ShoppingCartController(BookManagementContext context, IToastNotification toastNotification)
         {
             _context = context;
             _toastNotification = toastNotification;

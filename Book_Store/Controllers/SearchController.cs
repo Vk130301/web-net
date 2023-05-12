@@ -13,9 +13,9 @@ namespace Book_Store.Controllers
 {
     public class SearchController : Controller
     {
-        private readonly QlBansachContext _context;
+        private readonly BookManagementContext _context;
 
-        public SearchController(QlBansachContext context)
+        public SearchController(BookManagementContext context)
         {
             _context = context;
         }

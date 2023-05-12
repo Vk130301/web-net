@@ -19,11 +19,11 @@ namespace Book_Store.Areas.Admin.Controllers
     [Authentication]
     public class AdminProductsController : Controller
     {
-        private readonly QlBansachContext _context;
+        private readonly BookManagementContext _context;
         private readonly IToastNotification _toastNotification;
 
 
-        public AdminProductsController(QlBansachContext context, IToastNotification toastNotification)
+        public AdminProductsController(BookManagementContext context, IToastNotification toastNotification)
         {
             _context = context;
             _toastNotification = toastNotification;
@@ -31,7 +31,7 @@ namespace Book_Store.Areas.Admin.Controllers
 
 
         // GET: Admin/AdminProducts
-        public IActionResult Index(int page = 1, int CateID = 0)
+        public IActionResult Index(int page = 1, int CateID = 0, int AuthorID = 0)
         {
             var pageNumber = page;
             var pageSize = 20;
@@ -39,38 +39,75 @@ namespace Book_Store.Areas.Admin.Controllers
             List<Product> lsProducts = new List<Product>();
             if (CateID != 0)
             {
-                lsProducts = _context.Products
-                .AsNoTracking()
-                .Where(x => x.CateId == CateID)
-                .Include(x => x.Cate)
-                .OrderBy(x => x.ProductId).ToList();
+                if (AuthorID != 0)
+                {
+                    lsProducts = _context.Products
+                        .AsNoTracking()
+                        .Where(x => x.CateId == CateID && x.AuthorId == AuthorID)
+                        .Include(x => x.Cate)
+                        .Include(x => x.Author)
+                        .OrderBy(x => x.ProductId)
+                        .ToList();
+                }
+                else
+                {
+                    lsProducts = _context.Products
+                        .AsNoTracking()
+                        .Where(x => x.CateId == CateID)
+                        .Include(x => x.Cate)
+                        .Include(x => x.Author)
+                        .OrderBy(x => x.ProductId)
+                        .ToList();
+                }
             }
             else
             {
-                lsProducts = _context.Products
-                .AsNoTracking()
-                .Include(x => x.Cate)
-                .OrderBy(x => x.ProductId).ToList();
+                if (AuthorID != 0)
+                {
+                    lsProducts = _context.Products
+                        .AsNoTracking()
+                        .Where(x => x.AuthorId == AuthorID)
+                        .Include(x => x.Cate)
+                        .Include(x => x.Author)
+                        .OrderBy(x => x.ProductId)
+                        .ToList();
+                }
+                else
+                {
+                    lsProducts = _context.Products
+                        .AsNoTracking()
+                        .Include(x => x.Cate)
+                        .Include(x => x.Author)
+                        .OrderBy(x => x.ProductId)
+                        .ToList();
+                }
             }
 
 
 
             PagedList<Product> models = new PagedList<Product>(lsProducts.AsQueryable(), pageNumber, pageSize);
             ViewBag.CurrentCateID = CateID;
+            ViewBag.CurrentAuthorID = AuthorID;
 
             ViewBag.CurrentPage = pageNumber;
 
             ViewData["DanhMuc"] = new SelectList(_context.Categories, "CateId", "CateName");
+            ViewData["TacGia"] = new SelectList(_context.Authors, "AuthorId", "AuthorName");
 
             return View(models);
         }
 
-        public IActionResult Filter(int CateID = 0)
+        public IActionResult Filter(int CateID = 0, int AuthorID = 0)
         {
-            var url = $"/Admin/AdminProducts/Index?CateID={CateID}";
-            if (CateID == 0)
+            var url = $"/Admin/AdminProducts/Index?CateID={CateID}&AuthorID={AuthorID}";
+            if (CateID == 0 & AuthorID == 0)
             {
                 url = $"/Admin/AdminProducts/Index";
+            }
+            else
+            {
+                if (AuthorID == 0) url = $"/Admin/AdminProducts/Index?CateID={CateID}";
+                if (CateID == 0) url = $"/Admin/AdminProducts/Index?AuthorID={AuthorID}";
             }
             return Json(new { status = "success", redirectUrl = url });
         }
@@ -99,6 +136,7 @@ namespace Book_Store.Areas.Admin.Controllers
         public IActionResult Create()
         {
             ViewData["DanhMuc"] = new SelectList(_context.Categories, "CateId", "CateName");
+            ViewData["TacGia"] = new SelectList(_context.Authors, "AuthorId", "AuthorName");
             return View();
         }
 
@@ -129,6 +167,7 @@ namespace Book_Store.Areas.Admin.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["DanhMuc"] = new SelectList(_context.Categories, "CateId", "CateName", product.CateId);
+            ViewData["TacGia"] = new SelectList(_context.Authors, "AuthorId", "AuthorName", product.AuthorId);
             return View(product);
         }
 
@@ -146,6 +185,7 @@ namespace Book_Store.Areas.Admin.Controllers
                 return NotFound();
             }
             ViewData["DanhMuc"] = new SelectList(_context.Categories, "CateId", "CateName", product.CateId);
+            ViewData["TacGia"] = new SelectList(_context.Authors, "AuthorId", "AuthorName", product.AuthorId);
             return View(product);
         }
 
@@ -195,8 +235,33 @@ namespace Book_Store.Areas.Admin.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["DanhMuc"] = new SelectList(_context.Categories, "CateId", "CateName", product.CateId);
+            ViewData["TacGia"] = new SelectList(_context.Authors, "AuthorId", "AuthorName", product.AuthorId);
             return View(product);
         }
+
+        [HttpPost]
+        public ActionResult EditAll(string ids, int discount)
+        {
+            if (!string.IsNullOrEmpty(ids))
+            {
+                var productIds = ids.Split(',').Select(int.Parse).ToArray();
+                var products = _context.Products.Where(p => productIds.Contains(p.ProductId)).ToList();
+                if (products.Count > 0)
+                {
+                    foreach (var product in products)
+                    {
+                        product.Discount = discount;
+                        _context.Products.Update(product);
+                    }
+
+                    _context.SaveChanges();
+                    return Json(new { success = true });
+                }
+            }
+
+            return Json(new { success = false });
+        }
+
 
         // GET: Admin/AdminProducts/Delete/5
         public async Task<IActionResult> Delete(int? id)
@@ -227,11 +292,6 @@ namespace Book_Store.Areas.Admin.Controllers
                 return Problem("Entity set 'QlBansachContext.Products'  is null.");
             }
             var product = await _context.Products.FindAsync(id);
-            var table = _context.Products.Include(t => t.AttributesPrices).FirstOrDefault(t => t.ProductId == id);
-            foreach (var item in table.AttributesPrices)
-            {
-                _context.AttributesPrices.Remove(item);
-            }
             if (product != null)
             {
                 _context.Products.Remove(product);

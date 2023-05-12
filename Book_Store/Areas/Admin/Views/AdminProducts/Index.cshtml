@@ -20,16 +20,24 @@
         <div class="row m-b-30">
             <div class="col-md-8">
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <div class="input-affix m-v-10">
                             <i class="prefix-icon anticon anticon-search opacity-04"></i>
                             <input id="keyword" name="keyword" type="text" class="form-control" placeholder="Tìm kiếm sản phẩm">
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <div class="input-affix m-v-10">
                             <select class="custom-select" id="txtCateID" name="txtCateID" style="min-width: 200px;" asp-items="ViewBag.DanhMuc">
                                 <option disabled selected>Chọn danh mục</option>
+                                <option value="0">Chọn tất cả</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="input-affix m-v-10">
+                            <select class="custom-select" id="txtAuthorID" name="txtAuthorID" style="min-width: 200px;" asp-items="ViewBag.TacGia">
+                                <option disabled selected>Chọn tác giả</option>
                                 <option value="0">Chọn tất cả</option>
                             </select>
                         </div>
@@ -48,6 +56,7 @@
                         <th><input type="checkbox" id="selectAll"></th>
                         <th>ID</th>
                         <th>Tên sản phẩm</th>
+                        <th>Tác Giả</th>
                         <th>Danh mục</th>
                         <th>Giá</th>
                         <th>Discount</th>
@@ -76,6 +85,7 @@
                                 <td>
                                        @item.ProductName
                                 </td>
+                                <td>@item.Author.AuthorName</td>
                                 <td>@item.Cate.CateName</td>
                                 <td>@item.Price.Value.ToString("#,##0") VNĐ</td>
                                 <td>@item.Discount%</td>
@@ -127,7 +137,7 @@
             </table>
             <div aria-label="Page navigation example">
                 <ul class="pagination">
-                    <pager class="pager-container" list="@Model" asp-area="Admin" asp-controller="AdminProducts" asp-route-CateID="@ViewBag.CurrentCateID" asp-action="Index" />
+                    <pager class="pager-container" list="@Model" asp-area="Admin" asp-controller="AdminProducts" asp-route-CateID="@ViewBag.CurrentCateID" asp-route-AuthorID="@ViewBag.CurrentAuthorID" asp-action="Index" />
                 </ul>
             </div>
         </div>
@@ -137,19 +147,64 @@
 @section Scripts{
     <script>
         $(document).ready(function () {
+            function GetUrlParameter(sParam) {
+                var sPageURL = window.location.search.substring(1);
+                var sURLVariables = sPageURL.split('&')
+                for (var i = 0; i < sURLVariables.length; i++) {
+                    var sParameterName = sURLVariables[i].split('=');
+                    if (sParameterName[0] == sParam) {
+                        return sParameterName[1];
+                    }
+                }
+            }
             jQuery("#txtCateID").change(function () {
                 var cateID = jQuery(this).children(":selected").attr("value");
                 cateID = parseFloat(cateID);
                 $('#txtCateID option')
                     .removeAttr('selected');
                 $("#txtCateID > [value=" + cateID + "]").attr("selected", "true");
+
+                var authorID = $('#txtAuthorID option:selected').attr("id");
+                if (authorID === undefined) authorID = GetUrlParameter("authorID")
+
                 $.ajax({
                     url: '/Admin/AdminProducts/Filter',
                     datatype: "json",
                     type: "GET",
                     data: {
+                        AuthorID: authorID,
                         CateID: cateID
-                    },  
+                    },
+                    async: true,
+                    success: function (results) {
+                        if (results.status == "success") {
+                            window.location.href = results.redirectUrl;
+                        }
+                    },
+                    error: function (xhr) {
+                        alert('error');
+                    }
+                });
+            });
+
+            jQuery("#txtAuthorID").change(function () {
+                var authorID = jQuery(this).children(":selected").attr("value");
+                authorID = parseFloat(authorID);
+                $('#txtAuthorID option')
+                    .removeAttr('selected');
+                $("#txtAuthorID > [value=" + authorID + "]").attr("selected", "true");
+
+                var cateID = $('#txtCateID option:selected').attr("id");
+                if (cateID === undefined) cateID = GetUrlParameter("cateID")
+
+                $.ajax({
+                    url: '/Admin/AdminProducts/Filter',
+                    datatype: "json",
+                    type: "GET",
+                    data: {
+                        AuthorID: authorID,
+                        CateID: cateID
+                    },
                     async: true,
                     success: function (results) {
                         if (results.status == "success") {
@@ -208,17 +263,32 @@
             })
         });
 
-        $('#editSelected').click(function () {
-            const selectedProducts = $('input[name=selectedProducts]:checked').map(function () {
-                return this.value;
-            }).get();
+        $('body').on('click', '#editSelected', function (e) {
+            e.preventDefault();
+            var selectedProducts = [];
+            var checkboxes = $(this).closest('table').find('input[name="selectedProducts"]:checked');
+            checkboxes.each(function () {
+                var productId = $(this).val();
+                selectedProducts.push(productId);
+            });
 
             if (selectedProducts.length > 0) {
-                const editUrl = `/Admin/AdminProducts/EditAll?productIds=${selectedProducts.join(',')}`;
-                window.location.href = editUrl;
+                var discount = parseFloat(prompt("Nhập giảm giá mới cho các sản phẩm đã chọn:"));
+                if (!isNaN(discount)) {
+                    $.ajax({
+                        url: "/Admin/AdminProducts/EditAll",
+                        type: "POST",
+                        data: { ids: selectedProducts.join(','), discount: discount },
+                        success: function (response) {
+                            if (response.success) {
+                                location.reload();
+                            }
+                        }
+                    });
+                }
             }
         });
-            
+
 
     </script>
 

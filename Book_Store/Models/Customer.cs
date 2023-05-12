@@ -23,12 +23,6 @@ public partial class Customer
 
     public string? Phone { get; set; }
 
-    public int? LocationId { get; set; }
-
-    public int? District { get; set; }
-
-    public int? Ward { get; set; }
-
     public DateTime? CreateDate { get; set; }
 
     public string? Password { get; set; }
@@ -38,6 +32,10 @@ public partial class Customer
     public DateTime? LastLogin { get; set; }
 
     public bool Active { get; set; }
+
+    public int? FaceId { get; set; }
+
+    public virtual Face? Face { get; set; }
 
     public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 }

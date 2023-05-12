@@ -24,7 +24,7 @@ namespace Book_Store.Areas.Admin.Models.Authentication
                 return;
             }
 
-            var roleString = context.HttpContext.Session.GetString("Description");
+            var roleString = context.HttpContext.Session.GetString("RoleName");
 
             if (string.IsNullOrEmpty(roleString))
             {

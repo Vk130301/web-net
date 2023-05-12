@@ -22,10 +22,10 @@ namespace Book_Store.Controllers
     [Authorize]
     public class AccountsController : Controller
     {
-        private readonly QlBansachContext _context;
+        private readonly BookManagementContext _context;
         private readonly IToastNotification _toastNotification;
 
-        public AccountsController(QlBansachContext context, IToastNotification toastNotification)
+        public AccountsController(BookManagementContext context, IToastNotification toastNotification)
         {
             _context = context;
             _toastNotification = toastNotification;

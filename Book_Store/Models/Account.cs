@@ -25,6 +25,10 @@ public partial class Account
 
     public DateTime? CreateDate { get; set; }
 
+    public int? FaceId { get; set; }
+
+    public virtual Face? Face { get; set; }
+
     public virtual ICollection<Post> Posts { get; set; } = new List<Post>();
 
     public virtual Role? Role { get; set; }

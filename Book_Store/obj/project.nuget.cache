@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "vULuGuONkRsIKJKye7YFVRMZP2twleleDZMZYmCgRraEQhxcau9RaCM/b5ZcuL6hmngh9d1NAeWQ1EhEz0I5Bw==",
+  "dgSpecHash": "nuHW8sVpUkac8QtMvEDWGROuyElYNkpgDlVSPdHPvImtuPlBzhHwmBDTMdAhRcnF5VC9GJeaqTgY97IT1IxGfg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\FShop\\source\\repos\\Book_Store\\Book_Store\\Book_Store.csproj",
+  "projectFilePath": "C:\\Users\\FShop\\source\\repos\\web-net\\Book_Store\\Book_Store.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\FShop\\.nuget\\packages\\azure.core\\1.24.0\\azure.core.1.24.0.nupkg.sha512",
     "C:\\Users\\FShop\\.nuget\\packages\\azure.identity\\1.6.0\\azure.identity.1.6.0.nupkg.sha512",

@@ -4,7 +4,9 @@
     foreach (var item in Model)
     {
         <tr>
-
+            <td>
+                <input type="checkbox" name="selectedProducts" value="@item.ProductId" />
+            </td>
             <td>
                 @item.ProductId
             </td>
@@ -14,6 +16,7 @@
                     <h6 class="m-b-0 m-l-10">@item.ProductName</h6>
                 </div>
             </td>
+            <td>@item.Author.AuthorName</td>
             <td>@item.Cate.CateName</td>
             <td>@item.Price.Value.ToString("#,##0") VNĐ</td>
             <td>@item.Discount%</td>

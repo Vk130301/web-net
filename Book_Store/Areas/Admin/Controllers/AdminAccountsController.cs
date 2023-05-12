@@ -19,10 +19,10 @@ namespace Book_Store.Areas.Admin.Controllers
     [CheckAdmin]
     public class AdminAccountsController : Controller
     {
-        private readonly QlBansachContext _context;
+        private readonly BookManagementContext _context;
         private readonly IToastNotification _toastNotification;
 
-        public AdminAccountsController(QlBansachContext context, IToastNotification toastNotification)
+        public AdminAccountsController(BookManagementContext context, IToastNotification toastNotification)
         {
             _context = context;
             _toastNotification = toastNotification;
@@ -77,7 +77,7 @@ namespace Book_Store.Areas.Admin.Controllers
             }
 
             ViewData["lsStatus"] = lsStatus;
-            ViewData["QuyenTruyCap"] = new SelectList(_context.Roles, "RoleId", "Description");
+            ViewData["QuyenTruyCap"] = new SelectList(_context.Roles, "RoleId", "RoleName");
             return View(models);
         }
 
@@ -119,7 +119,7 @@ namespace Book_Store.Areas.Admin.Controllers
         // GET: Admin/AdminAccounts/Create
         public IActionResult Create()
         {
-            ViewData["QuyenTruyCap"] = new SelectList(_context.Roles, "RoleId", "Description");
+            ViewData["QuyenTruyCap"] = new SelectList(_context.Roles, "RoleId", "RoleName");
             return View();
         }
 
@@ -142,7 +142,7 @@ namespace Book_Store.Areas.Admin.Controllers
                 _toastNotification.AddSuccessToastMessage("Tạo mới tài khoản thành công");
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["QuyenTruyCap"] = new SelectList(_context.Roles, "RoleId", "Description", account.RoleId);
+            ViewData["QuyenTruyCap"] = new SelectList(_context.Roles, "RoleId", "RoleName", account.RoleId);
             return View(account);
         }
 

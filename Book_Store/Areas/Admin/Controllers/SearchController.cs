@@ -9,9 +9,9 @@ namespace Book_Store.Areas.Admin.Controllers
     [Authentication]
     public class SearchController : Controller
     {
-        private readonly QlBansachContext _context;
+        private readonly BookManagementContext _context;
 
-        public SearchController(QlBansachContext context)
+        public SearchController(BookManagementContext context)
         {
             _context = context;
         }
@@ -24,12 +24,17 @@ namespace Book_Store.Areas.Admin.Controllers
             {
                 return PartialView("ListProductsSearchPartial", null);
             }
-            ls = _context.Products.AsNoTracking()
-                                  .Include(a => a.Cate)
-                                  .Where(x => x.ProductName.Contains(keyword))
-                                  .OrderByDescending(x => x.ProductName)
-                                  .Take(10)
-                                  .ToList();
+            ls = _context.Products
+                    .AsNoTracking()
+                    .Include(a => a.Cate)
+                    .Include(a => a.Author)
+                    .Where(x => x.ProductName.Contains(keyword) ||
+                           (x.Cate.CateName.Contains(keyword) ||
+                                 x.Author.AuthorName.Contains(keyword)))
+                    .OrderByDescending(x => x.ProductName)
+                    .Take(10)
+                    .ToList();
+
             if (ls == null)
             {
                 return PartialView("ListProductsSearchPartial", null);

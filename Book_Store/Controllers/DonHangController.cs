@@ -15,10 +15,10 @@ namespace Book_Store.Controllers
 {
     public class DonHangController : Controller
     {
-        private readonly QlBansachContext _context;
+        private readonly BookManagementContext _context;
         private readonly IToastNotification _toastNotification;
 
-        public DonHangController(QlBansachContext context, IToastNotification toastNotification)
+        public DonHangController(BookManagementContext context, IToastNotification toastNotification)
         {
             _context = context;
             _toastNotification = toastNotification;

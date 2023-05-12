@@ -22,10 +22,10 @@ namespace Book_Store.Areas.Admin.Controllers
 
     public class AccountController : Controller
     {
-        private readonly QlBansachContext _context;
+        private readonly BookManagementContext _context;
         private readonly IToastNotification _toastNotification;
 
-        public AccountController(QlBansachContext context, IToastNotification toastNotification)
+        public AccountController(BookManagementContext context, IToastNotification toastNotification)
         {
             _context = context;
             _toastNotification = toastNotification;
@@ -79,7 +79,7 @@ namespace Book_Store.Areas.Admin.Controllers
                     //identity
                     //luuw seccion Makh
                     HttpContext.Session.SetString("AccountId", admin.AccountId.ToString());
-                    HttpContext.Session.SetString("Description", admin.Role.Description.ToString());
+                    HttpContext.Session.SetString("RoleName", admin.Role.RoleName.ToString());
                     var taikhoanID = HttpContext.Session.GetString("AccountId");
 
                     //identity

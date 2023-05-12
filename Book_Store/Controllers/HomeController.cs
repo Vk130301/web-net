@@ -14,10 +14,10 @@ namespace Book_Store.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly QlBansachContext _context;
+        private readonly BookManagementContext _context;
         private readonly IToastNotification _toastNotification;
 
-        public HomeController(QlBansachContext context, IToastNotification toastNotification)
+        public HomeController(BookManagementContext context, IToastNotification toastNotification)
         {
             _context = context;
             _toastNotification = toastNotification;
@@ -46,10 +46,6 @@ namespace Book_Store.Controllers
                 productHome.lsProducts = lsProducts.Where(x => x.CateId == item.CateId).ToList();
                 lsProductViews.Add(productHome);
 
-                var quangcao = _context.QuangCaos
-                    .AsNoTracking()
-                    .FirstOrDefault(x => x.Active == true);
-
                 var TinTuc = _context.Posts
                     .AsNoTracking()
                     .Where(x => x.Published == true && x.IsNewfeed == true)
@@ -57,7 +53,6 @@ namespace Book_Store.Controllers
                     .Take(3)
                     .ToList();
                 model.Products = lsProductViews;
-                model.quangcao = quangcao;
                 model.TinTucs = TinTuc;
                 ViewBag.AllProducts = lsProducts;   
             }

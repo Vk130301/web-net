@@ -25,10 +25,10 @@ namespace Book_Store.Areas.Admin.Controllers
     //[Authorize]
     public class AdminOrdersController : Controller
     {
-        private readonly QlBansachContext _context;
+        private readonly BookManagementContext _context;
         private readonly IToastNotification _toastNotification;
 
-        public AdminOrdersController(QlBansachContext context, IToastNotification toastNotification)
+        public AdminOrdersController(BookManagementContext context, IToastNotification toastNotification)
         {
             _context = context;
             _toastNotification = toastNotification;
@@ -147,13 +147,13 @@ namespace Book_Store.Areas.Admin.Controllers
                         donhang.Paid = order.Paid;
                         donhang.Deleted = order.Deleted;
                         donhang.TransactStatusId = order.TransactStatusId;
-                        if (donhang.Paid == true)
+                        if (donhang.Paid == true|| donhang.TransactStatusId == 3)
                         {
                             donhang.PaymentDate = DateTime.Now;
                         }
-                        if (donhang.TransactStatusId == 5) donhang.Deleted = true;
-                        if (donhang.TransactStatusId == 3) donhang.ShipDate = DateTime.Now;
-                        if (donhang.TransactStatusId == 6 || donhang.TransactStatusId == 5)
+                        if (donhang.TransactStatusId == 4) donhang.Deleted = true;
+                        if (donhang.TransactStatusId == 2) donhang.ShipDate = DateTime.Now;
+                        if (donhang.TransactStatusId == 5 || donhang.TransactStatusId == 4)
                         {
                             // Cập nhật tồn kho sản phẩm nếu đơn hàng bị hủy
                             var orderDetails = await _context.OrderDetails.Where(od => od.OrderId == order.OrderId).ToListAsync();

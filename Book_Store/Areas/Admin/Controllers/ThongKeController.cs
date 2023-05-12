@@ -14,9 +14,9 @@ namespace Book_Store.Areas.Admin.Controllers
     [Authentication]
     public class ThongKeController : Controller
     {
-        private readonly QlBansachContext _context;
+        private readonly BookManagementContext _context;
 
-        public ThongKeController(QlBansachContext context)
+        public ThongKeController(BookManagementContext context)
         {
             _context = context;
         }
