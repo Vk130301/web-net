@@ -11,7 +11,5 @@ public partial class Face
 
     public byte[]? CheckFaceImg { get; set; }
 
-    public virtual ICollection<Account> Accounts { get; set; } = new List<Account>();
-
-    public virtual ICollection<Customer> Customers { get; set; } = new List<Customer>();
+    public string? Email { get; set; }
 }

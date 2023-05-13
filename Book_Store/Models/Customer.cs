@@ -5,10 +5,6 @@ namespace Book_Store.Models;
 
 public partial class Customer
 {
-    public Customer()
-    {
-        Orders = new HashSet<Order>();
-    }
     public int CustomerId { get; set; }
 
     public string? FullName { get; set; }
@@ -32,10 +28,6 @@ public partial class Customer
     public DateTime? LastLogin { get; set; }
 
     public bool Active { get; set; }
-
-    public int? FaceId { get; set; }
-
-    public virtual Face? Face { get; set; }
 
     public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 }

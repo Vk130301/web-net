@@ -5,10 +5,6 @@ namespace Book_Store.Models;
 
 public partial class Order
 {
-    public Order()
-    {
-        OrderDetails = new HashSet<OrderDetail>();
-    }
     public int OrderId { get; set; }
 
     public int? CustomerId { get; set; }

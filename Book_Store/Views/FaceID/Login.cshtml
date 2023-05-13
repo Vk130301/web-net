@@ -1,0 +1,148 @@
+﻿@model Book_Store.Models.Face
+@{
+    ViewData["Title"] = "Đăng nhập tài khoản";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
+{
+    <div class="alert alert-danger" role="alert">
+        @ViewBag.ErrorMessage
+    </div>
+}
+
+<p>@ViewBag.kq </p>
+<div id="cameraContainer">
+    <video id="videoElement" width="400" height="300" autoplay></video>
+</div>
+<form method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="login-form">
+        <h4 class="login-title">Đăng nhập</h4>
+        <div class="row">
+            <div class="col-md-12">
+                <label>Địa chỉ Email</label>
+                <input type="email" asp-for="Email" placeholder="Địa chỉ Email">
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <button id="captureButton">Chụp ảnh</button>
+            <input type="hidden" name="imageData" id="imageData">
+            <button id="loginButton" disabled>Đăng nhập</button>
+
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    <script>
+        // Cấu hình camera
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(function (stream) {
+                var videoElement = document.getElementById('videoElement');
+                videoElement.srcObject = stream;
+            })
+            .catch(function (error) {
+                console.error('Error accessing camera:', error);
+            });
+
+        // Chụp ảnh khi nhấp nút "Chụp ảnh"
+        var isImageCaptured = false;
+        var captureButton = document.getElementById('captureButton');
+        var loginButton = document.getElementById('loginButton');
+        var imageDataInput = document.getElementById('imageData');
+        captureButton.addEventListener('click', function () {
+            event.preventDefault();
+            var videoElement = document.getElementById('videoElement');
+            var canvas = document.createElement('canvas');
+            canvas.width = videoElement.videoWidth;
+            canvas.height = videoElement.videoHeight;
+            var context = canvas.getContext('2d');
+            context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+            var imageDataURL = canvas.toDataURL('image/png');
+
+            // Lưu ảnh vào input ẩn để gửi đi khi đăng nhập
+            imageDataInput.value = imageDataURL;
+            isImageCaptured = true; // Sửa thành true để đánh dấu rằng đã chụp ảnh
+
+            loginButton.disabled = false;
+        });
+
+
+
+        function loadHeaderCart() {
+            $('#miniCart').load("/AjaxContent/HeaderCart");
+            $('#numberCart').load("/AjaxContent/NumberCart");
+        }
+        $("form").submit(function (event) {
+            event.preventDefault(); // Ngăn chặn form gửi yêu cầu đi
+            if (!isImageCaptured) {
+                // Hiển thị thông báo lỗi
+                var errorMessage = "Vui lòng chụp ảnh trước khi đăng nhập.";
+                var errorMessageElement = document.createElement('div');
+                errorMessageElement.classList.add('alert', 'alert-danger');
+                errorMessageElement.setAttribute('role', 'alert');
+                errorMessageElement.textContent = errorMessage;
+                $(this).prepend(errorMessageElement); // Thay đổi "form" thành "$(this)"
+                return;
+            }
+
+            var email = $('input[name="Email"]').val();
+            var isValid = true;
+            if (email == '') {
+                $('span[data-valmsg-for="Email"]').text('Vui lòng nhập địa chỉ email.');
+                isValid = false;
+            } else {
+                $('span[data-valmsg-for="Email"]').text('');
+            }
+            if (isValid) {
+                var formData = $(this).serialize(); // Lấy dữ liệu form
+                $.post("/api/checkFaceID", formData)
+                    .done(function (data) {
+                        // Nếu đăng nhập thành công, thực hiện yêu cầu AJAX để lấy customerId
+                        $.get('api/getcustomerId', function (result) {
+                            // Lấy customerId từ phản hồi
+                            var customerId = result.customerID;
+                            var gioHang = JSON.parse(localStorage.getItem(customerId));
+                            var productid = [];
+                            var soLuong = [];
+
+                            for (var i = 0; i < gioHang.length; i++) {
+                                productid.push(gioHang[i].product.productId.toString());
+                                soLuong.push(gioHang[i].amount.toString());
+                            }
+                            $.ajax({
+                                url: 'api/cart/checklogin',
+                                type: "POST",
+                                dataType: "JSON",
+                                data: {
+                                    productID: productid,
+                                    amount: soLuong
+                                },
+                                success: function (response) {
+                                    if (response.success) {
+                                        loadHeaderCart();//Reload lai gio hang
+                                    }
+                                    setTimeout(function () {
+                                        window.location.href = data.url;
+                                    }, 1000)
+
+                                },
+                                error: function (error) {
+                                    alert("There was an error posting the data to the server: " + error.responseText);
+                                }
+                            });
+                        });
+                        setTimeout(function () {
+                            window.location.href = data.url;
+                        }, 1000)
+                    })
+                    .fail(function (jqXHR, textStatus, error) {
+                        // Hiển thị thông báo lỗi cho người dùng
+                        var errorMessage = jqXHR.responseJSON.error;
+                        alert(errorMessage);
+                    });
+            }
+        });
+    </script>
+    }

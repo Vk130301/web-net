@@ -1,0 +1,49 @@
+﻿
+@{
+    ViewData["Title"] = "Register";
+}
+
+<h1>Camera App</h1>
+
+<button id="captureButton">Chụp ảnh</button>
+<video id="videoElement" width="400" height="300" autoplay></video>
+
+@section Scripts {
+    <script>
+        // Cấu hình camera
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(function (stream) {
+                var videoElement = document.getElementById('videoElement');
+                videoElement.srcObject = stream;
+            })
+            .catch(function (error) {
+                console.error('Error accessing camera:', error);
+            });
+
+        // Chụp ảnh khi nhấp nút "Chụp ảnh"
+        var captureButton = document.getElementById('captureButton');
+        captureButton.addEventListener('click', function () {
+            var videoElement = document.getElementById('videoElement');
+            var canvas = document.createElement('canvas');
+            canvas.width = videoElement.videoWidth;
+            canvas.height = videoElement.videoHeight;
+            var context = canvas.getContext('2d');
+            context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+            var imageDataURL = canvas.toDataURL('image/png');
+
+            // Gửi ảnh về server hoặc xử lý theo nhu cầu của bạn
+            // Ví dụ: Sử dụng XMLHttpRequest để gửi ảnh về server
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/FaceID/RegisterSaveImage', true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+                    console.log('Image saved successfully.');
+                }
+            };
+            xhr.send('imageData=' + encodeURIComponent(imageDataURL));
+        });
+    </script>
+}
+
+

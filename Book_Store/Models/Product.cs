@@ -1,15 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 namespace Book_Store.Models;
 
 public partial class Product
 {
-    public Product()
-    {
-        OrderDetails = new HashSet<OrderDetail>();
-    }
     public int ProductId { get; set; }
 
     public string? ProductName { get; set; }
@@ -46,8 +41,6 @@ public partial class Product
 
     public string? MetaKey { get; set; }
 
-    [Required(ErrorMessage = "Phải nhập số lượng")]
-    [Range(0, 1000, ErrorMessage = "Giá trị tồn kho phải nằm trong khoảng từ 0 đến 1000")]
     public int? UnitslnStock { get; set; }
 
     public int? OriginalPrice { get; set; }

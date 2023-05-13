@@ -41,7 +41,7 @@ public partial class BookManagementContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=LAPTOP-BUQJ66R9\\SQLEXPRESS01;Database=Book_Management;Trusted_Connection=True;Encrypt=False;");
+        => optionsBuilder.UseSqlServer("Server=DESKTOP-BVAKSHC\\SQLEXPRESS;Database=Book_Management;Trusted_Connection=True;Encrypt=False;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -50,7 +50,6 @@ public partial class BookManagementContext : DbContext
             entity.Property(e => e.AccountId).HasColumnName("AccountID");
             entity.Property(e => e.CreateDate).HasColumnType("datetime");
             entity.Property(e => e.Email).HasMaxLength(50);
-            entity.Property(e => e.FaceId).HasColumnName("FaceID");
             entity.Property(e => e.FullName).HasMaxLength(150);
             entity.Property(e => e.LastLogin).HasColumnType("datetime");
             entity.Property(e => e.Password).HasMaxLength(50);
@@ -61,10 +60,6 @@ public partial class BookManagementContext : DbContext
             entity.Property(e => e.Salt)
                 .HasMaxLength(6)
                 .IsFixedLength();
-
-            entity.HasOne(d => d.Face).WithMany(p => p.Accounts)
-                .HasForeignKey(d => d.FaceId)
-                .HasConstraintName("FK_Accounts_Face");
 
             entity.HasOne(d => d.Role).WithMany(p => p.Accounts)
                 .HasForeignKey(d => d.RoleId)
@@ -103,7 +98,6 @@ public partial class BookManagementContext : DbContext
             entity.Property(e => e.Email)
                 .HasMaxLength(150)
                 .IsFixedLength();
-            entity.Property(e => e.FaceId).HasColumnName("FaceID");
             entity.Property(e => e.FullName).HasMaxLength(255);
             entity.Property(e => e.LastLogin).HasColumnType("datetime");
             entity.Property(e => e.Password).HasMaxLength(50);
@@ -113,10 +107,6 @@ public partial class BookManagementContext : DbContext
             entity.Property(e => e.Salt)
                 .HasMaxLength(8)
                 .IsFixedLength();
-
-            entity.HasOne(d => d.Face).WithMany(p => p.Customers)
-                .HasForeignKey(d => d.FaceId)
-                .HasConstraintName("FK_Customers_Face");
         });
 
         modelBuilder.Entity<Face>(entity =>
@@ -124,6 +114,9 @@ public partial class BookManagementContext : DbContext
             entity.ToTable("Face");
 
             entity.Property(e => e.FaceId).HasColumnName("FaceID");
+            entity.Property(e => e.Email)
+                .HasMaxLength(150)
+                .IsFixedLength();
         });
 
         modelBuilder.Entity<Order>(entity =>
