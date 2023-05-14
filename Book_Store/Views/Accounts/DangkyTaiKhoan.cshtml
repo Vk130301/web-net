@@ -22,7 +22,7 @@
                                 </div>
                                 <div class="col-md-12">
                                     <label>Địa chỉ Email</label>
-                                    <input type="email" asp-for="Email" placeholder="Địa chỉ Email">
+                                    <input type="email" id="emailInput" asp-for="Email" placeholder="Địa chỉ Email">
                                     <span asp-validation-for="Email" class="text-danger"></span>
                                 </div>
                                 <div class="col-md-12">
@@ -41,7 +41,11 @@
                                     <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
                                 </div>
                                 <div class="col-12">
-                                    <button class="btn btn-custom-size lg-size btn-secondary btn-primary-hover rounded-0">Đăng ký</button>
+                                    <button id="btnSubmit" class="btn btn-custom-size lg-size btn-secondary btn-primary-hover rounded-0">Đăng ký</button>
+                                </div>
+                                <div style="margin-top:10px">
+                                    Bạn đã có tài khoản? Đăng nhập <a style="margin-top:5px; border-bottom: 1px solid black" href="https://localhost:44379/dang-nhap.html">tại đây!</a>
+
                                 </div>
                             </div>
                         </div>
@@ -51,4 +55,39 @@
         </div>
     </div>
 </main>
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            // Lắng nghe sự kiện khi người dùng nhấn nút đăng ký
+            $('form').on('submit', function (e) {
+                e.preventDefault(); // Ngăn form tự động submit
+
+                var email = $('input[name="Email"]').val();
+               
+                // Gửi yêu cầu kiểm tra email đến máy chủ
+                $.ajax({
+                    url: '/Accounts/ValidateEmail',
+                    type: 'POST',
+                    data: { Email: email },
+                    success: function (response) {
+                        if (response === true) {
+                            // Email hợp lệ, tiếp tục xử lý đăng ký
+                            $('form').submit(); // Submit form
+                        } else {
+                            // Hiển thị thông báo lỗi
+                            $('span[data-valmsg-for="Email"]').text('Email này đã được sử dụng');
+
+                        }
+                    },
+                    error: function () {
+                        // Xử lý lỗi
+                        $('span[data-valmsg-for="Email"]').text('Lỗi hệ thống');
+
+                    }
+                });
+            });
+        })
+    </script>
+
+}
 

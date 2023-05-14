@@ -156,32 +156,40 @@ namespace Book_Store.Areas.Admin.Controllers
             try
             {
                 var taikhoanID = HttpContext.Session.GetString("AccountId");
-                if (taikhoanID == null)
-                {
-                    return RedirectToAction("AdminLogin", "Account", new { Area = "Admin" });
-                }
                 if (ModelState.IsValid)
                 {
-                    var taikhoan = _context.Accounts.Find(Convert.ToInt32(taikhoanID));
-                    if (taikhoan == null) return RedirectToAction("AdminLogin", "Account", new { Area = "Admin" });
-                    var pass = (model.PasswordNow.Trim() + taikhoan.Salt.Trim()).ToMD5();
+                    var taikhoan = _context.Accounts    .Find(Convert.ToInt32(taikhoanID));
+                    if (taikhoan == null) return RedirectToAction("AdminLogin", "Account");
+
+                    var passNow = (model.PasswordNow.Trim() + taikhoan.Salt.Trim()).ToMD5();
+
+                    if (passNow == taikhoan.Password)
                     {
-                        string passnew = (model.Password.Trim() + taikhoan.Salt.Trim()).ToMD5();
-                        taikhoan.Password = passnew;
+                        var passNew = (model.Password.Trim() + taikhoan.Salt.Trim()).ToMD5();
+                        taikhoan.Password = passNew;
                         _context.Update(taikhoan);
                         _context.SaveChanges();
                         _toastNotification.AddSuccessToastMessage("Đổi mật khẩu thành công");
-                        return RedirectToAction("Index", "Home", new { Area = "Admin" });
+                        return RedirectToAction("Index", "Home");
                     }
+                    else
+                    {
+                        _toastNotification.AddErrorToastMessage("Mật khẩu cũ không chính xác");
+                        return RedirectToAction("Index", "Home");
+                    }
+                }
+                else
+                {
+                    _toastNotification.AddErrorToastMessage("Dữ liệu không hợp lệ");
+                    return RedirectToAction("Index", "Home");
                 }
             }
             catch
             {
                 _toastNotification.AddErrorToastMessage("Thay đổi mật khẩu không thành công");
-                return RedirectToAction("Index", "Home", new { Area = "Admin" });
+                return RedirectToAction("Index", "Home");
             }
-            _toastNotification.AddErrorToastMessage("Thay đổi mật khẩu không thành công");
-            return RedirectToAction("Index", "Home", new { Area = "Admin" });
         }
+
     }
 }

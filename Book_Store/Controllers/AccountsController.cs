@@ -30,9 +30,9 @@ namespace Book_Store.Controllers
             _context = context;
             _toastNotification = toastNotification;
         }
-        [HttpGet]
+        [HttpPost]
         [AllowAnonymous]
-        public IActionResult ValidatePhone(string Phone)
+        public async Task<IActionResult> ValidatePhone(string Phone)
         {
             try
             {
@@ -45,23 +45,23 @@ namespace Book_Store.Controllers
             }
             catch
             {
-                return Json(data: true);
+                return Json(data: "Số điện thoại : " + Phone + "đã được sử dụng");
             }
         }
-        [HttpGet]
+        [HttpPost]
         [AllowAnonymous]
-        public IActionResult ValidateEmail(string Email)
+        public async Task<IActionResult> ValidateEmail(string Email)
         {
             try
             {
-                var khachhang = _context.Customers.AsNoTracking().SingleOrDefault(x => x.Email.ToLower() == Email.ToLower());
+                var khachhang =  _context.Customers.AsNoTracking().SingleOrDefault(x => x.Email.ToLower() == Email.ToLower());
                 if (khachhang != null)
                     return Json(data: "Email : " + Email + " đã được sử dụng");
                 return Json(data: true);
             }
             catch
             {
-                return Json(data: true);
+                return Json(data: "Email : " + Email + " đã được sử dụng");
             }
         }
         [Route("tai-khoan-cua-toi.html", Name = "Dashboard")]
@@ -99,10 +99,13 @@ namespace Book_Store.Controllers
         [Route("dang-ky.html",Name ="DangKy")]
         public async Task<IActionResult> DangkyTaiKhoan(RegisterViewModel taikhoan)
         {
+
             try
             {
                 if (ModelState.IsValid)
                 {
+                    // Kiểm tra email và số điện thoại duy nhất
+                   
                     string salt = Utilities.GetRandomKey();
                     Customer khachhang = new Customer
                     {
@@ -177,7 +180,7 @@ namespace Book_Store.Controllers
 
                     if (khachhang == null)
                     {
-                        _toastNotification.AddErrorToastMessage("Thông tin đăng nhập chưa chính xác");
+                        _toastNotification.AddErrorToastMessage("Thông tin đăng nhập chưa chính xác!");
                         return BadRequest();
                     }      
                     string pass = (customer.Password + khachhang.Salt.Trim()).ToMD5();
@@ -233,6 +236,35 @@ namespace Book_Store.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        //[HttpPost]
+        //public IActionResult ChangePassword(ChangePasswordViewModel model)
+        //{
+        //    try
+        //    {
+        //        var taikhoanID = HttpContext.Session.GetString("CustomerId");
+        //        if (ModelState.IsValid)
+        //        {
+        //            var taikhoan = _context.Customers.Find(Convert.ToInt32(taikhoanID));
+        //            var pass = (model.PasswordNow.Trim() + taikhoan.Salt.Trim()).ToMD5();
+        //            if (taikhoan == null) return RedirectToAction("Login", "Accounts");
+        //            {
+        //                string passnew = (model.Password.Trim() + taikhoan.Salt.Trim()).ToMD5();
+        //                taikhoan.Password = passnew;
+        //                _context.Update(taikhoan);
+        //                _context.SaveChanges();
+        //                _toastNotification.AddSuccessToastMessage("Đổi mật khẩu thành công");
+        //                return RedirectToAction("Dashboard", "Accounts");
+        //            }
+        //        }
+        //    }
+        //    catch 
+        //    {
+        //        _toastNotification.AddSuccessToastMessage("Thay đổi mật khẩu không thành công");
+        //        return RedirectToAction("Dashboard", "Accounts");
+        //    }
+        //    _toastNotification.AddErrorToastMessage("Thay đổi mật khẩu không thành công");
+        //    return RedirectToAction("Dashboard", "Accounts");
+        //}
         [HttpPost]
         public IActionResult ChangePassword(ChangePasswordViewModel model)
         {
@@ -243,25 +275,37 @@ namespace Book_Store.Controllers
                 {
                     var taikhoan = _context.Customers.Find(Convert.ToInt32(taikhoanID));
                     if (taikhoan == null) return RedirectToAction("Login", "Accounts");
-                    var pass = (model.PasswordNow.Trim() + taikhoan.Salt.Trim()).ToMD5();
+
+                    var passNow = (model.PasswordNow.Trim() + taikhoan.Salt.Trim()).ToMD5();
+
+                    if (passNow == taikhoan.Password)
                     {
-                        string passnew = (model.Password.Trim() + taikhoan.Salt.Trim()).ToMD5();
-                        taikhoan.Password = passnew;
+                        var passNew = (model.Password.Trim() + taikhoan.Salt.Trim()).ToMD5();
+                        taikhoan.Password = passNew;
                         _context.Update(taikhoan);
                         _context.SaveChanges();
                         _toastNotification.AddSuccessToastMessage("Đổi mật khẩu thành công");
                         return RedirectToAction("Dashboard", "Accounts");
                     }
+                    else
+                    {
+                        _toastNotification.AddErrorToastMessage("Mật khẩu cũ không chính xác");
+                        return RedirectToAction("Dashboard", "Accounts");
+                    }
+                }
+                else
+                {
+                    _toastNotification.AddErrorToastMessage("Dữ liệu không hợp lệ");
+                    return RedirectToAction("Dashboard", "Accounts");
                 }
             }
-            catch 
+            catch
             {
-                _toastNotification.AddSuccessToastMessage("Thay đổi mật khẩu không thành công");
+                _toastNotification.AddErrorToastMessage("Thay đổi mật khẩu không thành công");
                 return RedirectToAction("Dashboard", "Accounts");
             }
-            _toastNotification.AddErrorToastMessage("Thay đổi mật khẩu không thành công");
-            return RedirectToAction("Dashboard", "Accounts");
         }
+
 
         [HttpGet]
         [Route("api/getcustomerId")]
