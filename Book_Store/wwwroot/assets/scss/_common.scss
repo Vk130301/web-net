@@ -84,18 +84,18 @@ h1, h2, h3, h4, h5, h6{
     color: $secondary;
 }
 ul {
-	margin: 0;
-	padding: 0;
-	list-style: none;
+    margin: 0;
+    padding: 0;
+    list-style: none;
 }
 img {
 	max-width: 100%;
 }
 .img-full {
-	width: 100%;
-	overflow: hidden;
-	object-fit: cover;
-	object-position: center center;
+    width: 100%;
+    overflow: hidden;
+    object-position: center center;
+    object-fit: contain;
 }
 ::selection{
     background-color: $primary;

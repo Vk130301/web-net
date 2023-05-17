@@ -219,6 +219,7 @@
 
             $("#keyword").keyup(function () {
                 var strkeyword = $('#keyword').val();
+                console.log(strkeyword);
                 $.ajax({
                     url: '/Admin/Search/FindProduct/',
                     datatype: "json",

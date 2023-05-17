@@ -4,31 +4,112 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
-{
-    <div class="alert alert-danger" role="alert">
-        @ViewBag.ErrorMessage
-    </div>
-}
 
-<p>@ViewBag.kq </p>
+<style>
+    .hidden {
+        display: none;
+    }
+
+    #cameraContainer{
+        display :flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #videoElement {
+        transform: scaleX(-1);
+        border-radius: 5px;
+    }
+
+    #imagePreview{
+        transform: scaleX(-1);
+    }
+
+    .content-login{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .btn:disabled{
+        pointer-events :all;
+        cursor: not-allowed;
+    }
+    .btn-success{
+        background-color: #bac34e !important;
+        color:whitesmoke !important;
+        border:none;
+    }
+
+    .btn-success:hover{
+            background-color: #bac34ead !important;
+        color: whitesmoke !important;
+        border: none;
+    }
+
+    .btn-info{
+        color: white !important ;
+        background-color: #bac34e !important;
+        border: none !important;    
+    }
+
+    .btn-info:hover {
+        color: black !important;
+            background-color: #bac34ead !important;
+
+    }
+    .container-video{
+        width: 600px;
+        height: 400px;
+        text-align:center;
+        /*box-shadow: 1px 1px 10px 1px #bac34e, 0 0 20px rgb(59 140 116 / 74%);*/
+        box-shadow: 1px 1px 2px 1px #bac34e, 0 0 10px rgb(59 140 116 / 74%);
+
+        border-radius: 5px;
+        margin-bottom: 15px;
+    }
+
+    .inputemailogin{
+        border: 1px solid #bac34e !important
+    }
+
+    .inputemailogin:hover {
+        transform: scale(1.1)
+    }
+</style>
+<h4 class="title text-center">Đăng nhập FaceID <i class='fa fa-camera-retro'></i></h4>
 <div id="cameraContainer">
-    <video id="videoElement" width="400" height="300" autoplay></video>
+    <div class="container-video">
+        <video id="videoElement" width="450" height="380" autoplay></video>
+
+    </div>
+</div>
+
+<div class="text-center" id="loadingIndicator" style="display: none;">
+    <img style="border-radius:6px;" width="300px" height="270px" src="~/images/loading2.gif" alt="Loading" />
 </div>
 <form method="post">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-    <div class="login-form">
-        <h4 class="login-title">Đăng nhập</h4>
-        <div class="row">
-            <div class="col-md-12">
-                <label>Địa chỉ Email</label>
-                <input type="email" asp-for="Email" placeholder="Địa chỉ Email">
-                <span asp-validation-for="Email" class="text-danger"></span>
+    <div class="login-form text-center">
+        
+        <div class="row text-center content-login">
+            <div  class="image-preview ">
+                <img width="500" height="320" id="imagePreview" class="hidden" src="#" alt="Ảnh chụp">
             </div>
-
-            <button id="captureButton">Chụp ảnh</button>
+            <div>
+                <label>Địa chỉ Email</label>
+                <input class="inputemailogin" style="width: 350px; border-radius: 10px" type="email" asp-for="Email" placeholder="Địa chỉ Email">
+                
+            </div>
+            <span asp-validation-for="Email" class="text-danger"></span>
+            
+            <div>
+                <button style="width: 180px" class="btn btn-info " id="captureButton">Chụp ảnh</button>
+            </div>
             <input type="hidden" name="imageData" id="imageData">
-            <button id="loginButton" disabled>Đăng nhập</button>
+            <div>
+                <button style="width: 180px" class="btn btn-success btn-dangnhapid mt-2" id="loginButton" disabled>Đăng Nhập</button>
+            </div>
 
         </div>
     </div>
@@ -36,6 +117,7 @@
 
 @section Scripts {
     <script>
+
         // Cấu hình camera
         navigator.mediaDevices.getUserMedia({ video: true })
             .then(function (stream) {
@@ -48,11 +130,19 @@
 
         // Chụp ảnh khi nhấp nút "Chụp ảnh"
         var isImageCaptured = false;
+        var contentVideo = document.querySelector('.container-video')
         var captureButton = document.getElementById('captureButton');
         var loginButton = document.getElementById('loginButton');
         var imageDataInput = document.getElementById('imageData');
-        captureButton.addEventListener('click', function () {
+        captureButton.addEventListener('click', function (event) {
             event.preventDefault();
+            var email = $('input[name="Email"]').val();
+            if (email == '') {
+                $('span[data-valmsg-for="Email"]').text('Vui lòng nhập địa chỉ email.');
+                isValid = false;
+            } else {
+                $('span[data-valmsg-for="Email"]').text('');
+            }
             var videoElement = document.getElementById('videoElement');
             var canvas = document.createElement('canvas');
             canvas.width = videoElement.videoWidth;
@@ -63,9 +153,15 @@
 
             // Lưu ảnh vào input ẩn để gửi đi khi đăng nhập
             imageDataInput.value = imageDataURL;
-            isImageCaptured = true; // Sửa thành true để đánh dấu rằng đã chụp ảnh
+            isImageCaptured = true; // Đánh dấu đã chụp ảnh
 
+            var imagePreview = document.getElementById('imagePreview');
+            imagePreview.src = imageDataURL;
+            captureButton.classList.add('hidden');
+            imagePreview.classList.remove('hidden'); // Ẩn ảnh
+            contentVideo.classList.add('hidden'); // Hiển thị camera
             loginButton.disabled = false;
+                
         });
 
 
@@ -74,8 +170,12 @@
             $('#miniCart').load("/AjaxContent/HeaderCart");
             $('#numberCart').load("/AjaxContent/NumberCart");
         }
+        var failedAttempts = 0;
+
         $("form").submit(function (event) {
-            event.preventDefault(); // Ngăn chặn form gửi yêu cầu đi
+            // Ngăn chặn form gửi yêu cầu đi
+            event.preventDefault();
+
             if (!isImageCaptured) {
                 // Hiển thị thông báo lỗi
                 var errorMessage = "Vui lòng chụp ảnh trước khi đăng nhập.";
@@ -95,10 +195,38 @@
             } else {
                 $('span[data-valmsg-for="Email"]').text('');
             }
+         
             if (isValid) {
-                var formData = $(this).serialize(); // Lấy dữ liệu form
+                loginButton.disabled = true;
+                $('#imagePreview').addClass('hidden');
+                $('#loadingIndicator').show();
+                var formData = $(this).serialize() + "&failedAttempts=" + failedAttempts; // Lấy dữ liệu form
                 $.post("/api/checkFaceID", formData)
                     .done(function (data) {
+                        if (data.success) {
+                            if (data.url === "/FaceID.html") {
+
+                                // Increment the number of failed attempts
+                                failedAttempts++;
+                                console.log(failedAttempts)
+
+                                if (failedAttempts <= 3) {
+                                    // Allow the user to retry face recognition
+                                    $('#imagePreview').addClass('hidden');
+                                    $('#loadingIndicator').hide();
+                                    captureButton.classList.remove('hidden');
+                                    contentVideo.classList.remove('hidden');
+                                    loginButton.disabled = true;
+                                    return;
+                                }
+                            }
+
+                            // Redirect the user
+                            setTimeout(function () {
+                                window.location.href = data.url;
+                                $('#loadingIndicator').hide();
+                            }, 1000);
+                        }
                         // Nếu đăng nhập thành công, thực hiện yêu cầu AJAX để lấy customerId
                         $.get('api/getcustomerId', function (result) {
                             // Lấy customerId từ phản hồi
@@ -133,8 +261,11 @@
                                 }
                             });
                         });
+
+                       
                         setTimeout(function () {
                             window.location.href = data.url;
+                            $('#loadingIndicator').hide();
                         }, 1000)
                     })
                     .fail(function (jqXHR, textStatus, error) {

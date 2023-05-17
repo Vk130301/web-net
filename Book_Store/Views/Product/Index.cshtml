@@ -31,14 +31,7 @@
             <div class="row">
                 <div class="col-lg-3 order-lg-1 order-2 pt-10 pt-lg-0">
                     <div class="sidebar-area">
-                        <div class="widgets-searchbox mb-9">
-                            <form id="widgets-searchbox" action="#">
-                                <input class="input-field" type="text" placeholder="Search">
-                                <button class="widgets-searchbox-btn" type="submit">
-                                    <i class="pe-7s-search"></i>
-                                </button>
-                            </form>
-                        </div>
+
                         <div class="widgets-area mb-9">
                             <h2 class="widgets-title mb-5">Refine By</h2>
                             <div class="widgets-item">
@@ -284,6 +277,7 @@
                     <div class="tab-content text-charcoal pt-8">
                         <div class="tab-pane fade" id="grid-view" role="tabpanel" aria-labelledby="grid-view-tab">
                             <div class="product-grid-view row">
+
                                 @if (Model != null && Model.Count() > 0)
                                 {
                                     foreach (var item in Model)
@@ -305,6 +299,9 @@
                                                         else
                                                         {
                                                             <img width="200" height="200" class="img-full" src="~/images/products/@item.Thumb" alt="@item.Title">
+                                                        
+                                                        
+                                                            
                                                         }
                                                     </a>
                                                     <div class="product-add-action">
@@ -316,7 +313,7 @@
                                                         </ul>
                                                     </div>
                                                 </div>
-                                                <div class="product-content">
+                                                <div style="height:200px" class="product-content">
                                                     <a class="product-name" href="@url">@item.ProductName</a>
                                                     <div class="price-box pb-1">
                                                         <span class="new-price">
@@ -327,7 +324,7 @@
                                                                 {
                                                                     double discountedPrice = price - (price * discount / 100);
                                                                     double roundedPrice = Math.Round(discountedPrice, 0, MidpointRounding.AwayFromZero);
-                                                                    <span style="display:flex;text-decoration: line-through; opacity:0.5">@item.Price.Value.ToString("#,##0") VNĐ</span>
+                                                                    <span style="display:block;text-decoration: line-through; opacity:0.5">@item.Price.Value.ToString("#,##0") VNĐ</span>
                                                                     <span>@roundedPrice.ToString("#,##0") VNĐ</span>
                                                                 }
                                                                 else
@@ -355,7 +352,16 @@
                             </div>
                         </div>
                         <div class="tab-pane fade show active" id="list-view" role="tabpanel" aria-labelledby="list-view-tab">
-                            <div class="product-list-view with-sidebar row">
+                            <div class="widgets-searchbox mb-9">
+                                <div class="col-md-4">
+                                    <div class="input-affix m-v-10">
+                                        <i class="prefix-icon anticon anticon-search opacity-04"></i>
+                                        <input id="myInput" onkeyup="myFunction()" name="keyword" type="text" class="form-control" placeholder="Tìm kiếm sản phẩm">
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="records_table" class="product-list-view with-sidebar row">
+
                                 @if (Model != null && Model.Count() > 0)
                                 {
                                     foreach (var item in Model)
@@ -440,3 +446,27 @@
     </div>
 </main>
 <!-- Main Content Area End Here -->
+@section Scripts{
+    <script>
+        function myFunction() {
+            var strkeyword = document.getElementById("myInput").value;
+            $.ajax({
+                url: '/Search/FindProduct/',
+                datatype: "json",
+                type: "POST",
+                data: { keyword: strkeyword },
+                async: true,
+                success: function (results) {
+                    $("#records_table").html("");
+                    $("#records_table").html(results);
+                },
+                error: function (xhr) {
+                    alert('error');
+                }
+            });
+        }
+
+
+    </script>
+
+}

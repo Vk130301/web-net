@@ -22,7 +22,7 @@ namespace Book_Store.Controllers
             _context = context;
             _toastNotification = toastNotification;
         }
-
+            
         public IActionResult Index()
         {
             HomeViewVM model = new HomeViewVM();

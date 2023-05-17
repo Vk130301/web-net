@@ -32,7 +32,7 @@ namespace Book_Store.Controllers
         }
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> ValidatePhone(string Phone)
+        public IActionResult ValidatePhone(string Phone)
         {
             try
             {
@@ -50,7 +50,7 @@ namespace Book_Store.Controllers
         }
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> ValidateEmail(string Email)
+        public IActionResult ValidateEmail(string Email)
         {
             try
             {

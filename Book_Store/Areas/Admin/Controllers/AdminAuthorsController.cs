@@ -68,7 +68,7 @@ namespace Book_Store.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("AuthorId,AuthorName,Description,Thumb,Alias,Title")] Author author, Microsoft.AspNetCore.Http.IFormFile fThumb)
+        public async Task<IActionResult> Create([Bind("AuthorId,AuthorName,Description,Thumb,Alias,Title")] Author author, Microsoft.AspNetCore.Http.IFormFile? fThumb)
         {
             if (ModelState.IsValid)
             {
@@ -110,7 +110,7 @@ namespace Book_Store.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("AuthorId,AuthorName,Description,Thumb,Alias,Title")] Author author, Microsoft.AspNetCore.Http.IFormFile fThumb)
+        public async Task<IActionResult> Edit(int id, [Bind("AuthorId,AuthorName,Description,Thumb,Alias,Title")] Author author, Microsoft.AspNetCore.Http.IFormFile? fThumb)
         {
             if (id != author.AuthorId)
             {

@@ -128,7 +128,6 @@ namespace Book_Store.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-
             return View(product);
         }
 
@@ -145,7 +144,7 @@ namespace Book_Store.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProductId,ProductName,ShortDesc,Description,CateId,Price,Discount,Thumb,Video,DateCreated,DateModified,BestSellers,HomeFlag,Active,Tags,Title,Alias,MetaDesc,MetaKey,UnitslnStock,OriginalPrice")] Product product, Microsoft.AspNetCore.Http.IFormFile fThumb)
+        public async Task<IActionResult> Create([Bind("ProductId,ProductName,ShortDesc,Description,CateId,AuthorId,Price,Discount,Thumb,Video,DateCreated,DateModified,BestSellers,HomeFlag,Active,Tags,Title,Alias,MetaDesc,MetaKey,UnitslnStock,OriginalPrice")] Product product, Microsoft.AspNetCore.Http.IFormFile? fThumb)
         {
             if (ModelState.IsValid)
             {
@@ -194,7 +193,7 @@ namespace Book_Store.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ProductId,ProductName,ShortDesc,Description,CateId,Price,Discount,Thumb,Video,DateCreated,DateModified,BestSellers,HomeFlag,Active,Tags,Title,Alias,MetaDesc,MetaKey,UnitslnStock,OriginalPrice")] Product product, Microsoft.AspNetCore.Http.IFormFile fThumb)
+        public async Task<IActionResult> Edit(int id, [Bind("ProductId,ProductName,ShortDesc,Description,CateId,AuthorId,Price,Discount,Thumb,Video,DateCreated,DateModified,BestSellers,HomeFlag,Active,Tags,Title,Alias,MetaDesc,MetaKey,UnitslnStock,OriginalPrice")] Product product, Microsoft.AspNetCore.Http.IFormFile? fThumb)
         {
             if (id != product.ProductId)
             {
@@ -233,6 +232,15 @@ namespace Book_Store.Areas.Admin.Controllers
                     }
                 }
                 return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                var errors = ModelState.Values.SelectMany(v => v.Errors);
+                foreach (var error in errors)
+                {
+                    Console.WriteLine(error.ErrorMessage);
+                }
+
             }
             ViewData["DanhMuc"] = new SelectList(_context.Categories, "CateId", "CateName", product.CateId);
             ViewData["TacGia"] = new SelectList(_context.Authors, "AuthorId", "AuthorName", product.AuthorId);

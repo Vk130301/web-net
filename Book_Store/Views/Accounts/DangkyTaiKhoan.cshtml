@@ -5,10 +5,20 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<style>
+    .password-toggle-icon {
+        position: absolute;
+        right: 10px;
+        top: 35%;
+        transform: translateY(-50%);
+        cursor: pointer;
+    }
+</style>
 <main class="main-content">
     <div class="login-register-area section-space-y-axis-100">
         <div class="container">
             <div class="row">
+                <div class="col-3"></div>
                 <div class="col-lg-6 pt-10 pt-lg-0">
                     <form asp-action="DangkyTaiKhoan">
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -32,25 +42,37 @@
                                 </div>
                                 <div class="col-md-6">
                                     <label>Mật khẩu</label>
-                                    <input type="password" asp-for="Password" placeholder="Mật khẩu">
+                                    <div style="position:relative" class="password-input-container">
+                                        <input type="password" asp-for="Password" placeholder="Mật khẩu" class="password-input">
+                                        <span class="password-toggle-icon">
+                                            <i class="fa fa-eye" id="password-toggle"></i>
+                                        </span>
+                                    </div>
                                     <span asp-validation-for="Password" class="text-danger"></span>
                                 </div>
-                                <div class="col-md-6">
+                                <div  class="col-md-6">
                                     <label>Nhập lại mật khẩu</label>
-                                    <input type="password" asp-for="ConfirmPassword" placeholder="Nhập lại mật khẩu">
+                                    <div style="position:relative" class="password-input-container">
+                                        <input type="password" asp-for="ConfirmPassword" placeholder="Nhập lại mật khẩu" class="confirm-password-input">
+                                        <span class="password-toggle-icon">
+                                            <i class="fa fa-eye" id="confirm-password-toggle"></i>
+                                        </span>
+                                    </div>
                                     <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
                                 </div>
                                 <div class="col-12">
                                     <button id="btnSubmit" class="btn btn-custom-size lg-size btn-secondary btn-primary-hover rounded-0">Đăng ký</button>
                                 </div>
                                 <div style="margin-top:10px">
-                                    Bạn đã có tài khoản? Đăng nhập <a style="margin-top:5px; border-bottom: 1px solid black" href="https://localhost:44379/dang-nhap.html">tại đây!</a>
+                                    Bạn đã có tài khoản? Đăng nhập <a style="margin-top:5px; border-bottom: 1px solid black" href="/dang-nhap.html">tại đây!</a>
 
                                 </div>
                             </div>
                         </div>
                     </form>
                 </div>
+                <div class="col-3"></div>
+
             </div>
         </div>
     </div>
@@ -58,11 +80,48 @@
 @section Scripts{
     <script>
         $(document).ready(function () {
+            $('#password-toggle').click(function () {
+                var passwordInput = $('.password-input');
+                var passwordToggle = $('#password-toggle');
+
+                if (passwordInput.attr('type') === 'password') {
+                    passwordInput.attr('type', 'text');
+                    passwordToggle.removeClass('fa-eye');
+                    passwordToggle.addClass('fa-eye-slash');
+                } else {
+                    passwordInput.attr('type', 'password');
+                    passwordToggle.removeClass('fa-eye-slash');
+                    passwordToggle.addClass('fa-eye');
+                }
+            });
+
+            $('#confirm-password-toggle').click(function () {
+                var confirmPasswordInput = $('.confirm-password-input');
+                var confirmPasswordToggle = $('#confirm-password-toggle');
+
+                if (confirmPasswordInput.attr('type') === 'password') {
+                    confirmPasswordInput.attr('type', 'text');
+                    confirmPasswordToggle.removeClass('fa-eye');
+                    confirmPasswordToggle.addClass('fa-eye-slash');
+                } else {
+                    confirmPasswordInput.attr('type', 'password');
+                    confirmPasswordToggle.removeClass('fa-eye-slash');
+                    confirmPasswordToggle.addClass('fa-eye');
+                }
+            });
             // Lắng nghe sự kiện khi người dùng nhấn nút đăng ký
             $('form').on('submit', function (e) {
-                e.preventDefault(); // Ngăn form tự động submit
-
+                event.preventDefault(); // Ngăn chặn form gửi yêu cầu đi
                 var email = $('input[name="Email"]').val();
+                var isValid = true;
+                if (email == '') {
+                    $('span[data-valmsg-for="Email"]').text('Vui lòng nhập địa chỉ email.');
+                    isValid = false;
+                } else {
+                    $('span[data-valmsg-for="UserName"]').text('');
+                }
+        
+                if (isValid) {
                
                 // Gửi yêu cầu kiểm tra email đến máy chủ
                 $.ajax({
@@ -85,6 +144,7 @@
 
                     }
                 });
+                }
             });
         })
     </script>

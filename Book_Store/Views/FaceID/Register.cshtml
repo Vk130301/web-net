@@ -1,16 +1,149 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "Register";
 }
 
-<h1>Camera App</h1>
+@*<Style>
+    .hidden {
+        display: none;
+    }
 
-<button id="captureButton">Chụp ảnh</button>
-<video id="videoElement" width="400" height="300" autoplay></video>
+    #videoElement {
+        transform: scaleX(-1);
+    }
+
+    #imagePreview {
+        transform: scaleX(-1);
+    }
+</Style>
+<div id="cameraContainer">
+    <video id="videoElement" width="400" height="300" autoplay></video>
+</div>
+
+<form method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="login-form">
+        <h4 class="login-title">Đăng ký FaceId</h4>
+        <div class="row">
+            <div class="image-preview ">
+                <img id="imagePreview" class="hidden" src="#" alt="Ảnh chụp">
+            </div>
+            <button id="captureButton">Chụp ảnh</button>
+            <input type="hidden" name="imageData" id="imageData">
+            <button id="loginButton" disabled>Setup FaceID</button>
+
+        </div>
+    </div>
+</form>*@
+<style>
+    .hidden {
+        display: none;
+    }
+
+    #cameraContainer {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #videoElement {
+        transform: scaleX(-1);
+        border-radius: 5px;
+    }
+
+    #imagePreview {
+        transform: scaleX(-1);
+    }
+
+    .content-login {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .btn:disabled {
+        pointer-events: all;
+        cursor: not-allowed;
+    }
+
+    .btn-success {
+        background-color: #bac34e !important;
+        color: whitesmoke !important;
+        border: none;
+    }
+
+        .btn-success:hover {
+            background-color: #bac34ead !important;
+            color: whitesmoke !important;
+            border: none;
+        }
+
+    .btn-info {
+        color: white !important;
+        background-color: #bac34e !important;
+        border: none !important;
+    }
+
+        .btn-info:hover {
+            color: black !important;
+            background-color: #bac34ead !important;
+        }
+
+    .container-video {
+        width: 600px;
+        height: 400px;
+        text-align: center;
+        /*box-shadow: 1px 1px 10px 1px #bac34e, 0 0 20px rgb(59 140 116 / 74%);*/
+        box-shadow: 1px 1px 2px 1px #bac34e, 0 0 10px rgb(59 140 116 / 74%);
+        border-radius: 5px;
+        margin-bottom: 15px;
+    }
+
+    .inputemailogin {
+        border: 1px solid #bac34e !important
+    }
+
+        .inputemailogin:hover {
+            transform: scale(1.1)
+        }
+</style>
+<h4 class="title text-center">Setup FaceID <i class='fa fa-camera-retro'></i></h4>
+<div id="cameraContainer">
+    <div class="container-video">
+        <video id="videoElement" width="400" height="400" autoplay></video>
+
+    </div>
+</div>
+
+<div class="text-center" id="loadingIndicator" style="display: none;">
+    <img style="border-radius:6px;" width="300px" height="270px" src="~/images/loading2.gif" alt="Loading" />
+</div>
+<form method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="login-form text-center">
+
+        <div class="row text-center content-login">
+            <div class="image-preview ">
+                <img width="500" height="320" id="imagePreview" class="hidden" src="#" alt="Ảnh chụp">
+
+            </div>
+            
+
+            <div>
+                <button style="width: 180px" class="btn btn-info " id="captureButton">Chụp ảnh</button>
+            </div>
+            <input type="hidden" name="imageData" id="imageData">
+            <div>
+                <button style="width: 180px" class="btn btn-success btn-dangnhapid mt-2" id="loginButton" disabled>Setup FaceID</button>
+            </div>
+
+        </div>
+    </div>
+</form>
+
+
 
 @section Scripts {
     <script>
-        // Cấu hình camera
         navigator.mediaDevices.getUserMedia({ video: true })
             .then(function (stream) {
                 var videoElement = document.getElementById('videoElement');
@@ -21,8 +154,16 @@
             });
 
         // Chụp ảnh khi nhấp nút "Chụp ảnh"
+        var isImageCaptured = false;
+        var captureButton = document.getElementById('captureButton');
+        var contentVideo = document.querySelector('.container-video');
+        var loginButton = document.getElementById('loginButton');
+        var imageDataInput = document.getElementById('imageData');
+
+        // Chụp ảnh khi nhấp nút "Chụp ảnh"
         var captureButton = document.getElementById('captureButton');
         captureButton.addEventListener('click', function () {
+            event.preventDefault();
             var videoElement = document.getElementById('videoElement');
             var canvas = document.createElement('canvas');
             canvas.width = videoElement.videoWidth;
@@ -30,6 +171,17 @@
             var context = canvas.getContext('2d');
             context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
             var imageDataURL = canvas.toDataURL('image/png');
+
+            // Lưu ảnh vào input ẩn để gửi đi khi đăng nhập
+            imageDataInput.value = imageDataURL;
+            isImageCaptured = true; // Đánh dấu đã chụp ảnh
+
+            var imagePreview = document.getElementById('imagePreview');
+            imagePreview.src = imageDataURL;
+            imagePreview.classList.remove('hidden'); // Ẩn ảnh
+            captureButton.classList.add('hidden');
+            contentVideo.classList.add('hidden');// Hiển thị camera
+            loginButton.disabled = false;
 
             // Gửi ảnh về server hoặc xử lý theo nhu cầu của bạn
             // Ví dụ: Sử dụng XMLHttpRequest để gửi ảnh về server
@@ -43,6 +195,37 @@
             };
             xhr.send('imageData=' + encodeURIComponent(imageDataURL));
         });
+        // Khi ấn nút "Đăng ký"
+        $("form").submit(function (event) {
+            event.preventDefault(); // Ngăn chặn form gửi yêu cầu đi
+            loginButton.disabled = true;
+
+            if (!isImageCaptured) {
+                // Hiển thị thông báo lỗi
+                var errorMessage = "Vui lòng chụp ảnh trước khi đăng ký.";
+                var errorMessageElement = document.createElement('div');
+                errorMessageElement.classList.add('alert', 'alert-danger');
+                errorMessageElement.setAttribute('role', 'alert');
+                errorMessageElement.textContent = errorMessage;
+                $(this).prepend(errorMessageElement); // Thay đổi "form" thành "$(this)"
+                return;
+            }
+
+
+            var formData = $(this).serialize(); // Lấy dữ liệu form
+            $.post("/api/checkRegisterFaceID", formData)
+                .done(function (data) {
+                    setTimeout(function () {
+                        window.location.href = data.url;
+                    }, 1000)
+                })
+                .fail(function (jqXHR, textStatus, error) {
+                    // Hiển thị thông báo lỗi cho người dùng
+                    var errorMessage = jqXHR.responseJSON.error;
+                    alert(errorMessage);
+                });
+        });
+
     </script>
 }
 

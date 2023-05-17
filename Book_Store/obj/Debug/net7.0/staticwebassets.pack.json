@@ -4713,12 +4713,44 @@
       "PackagePath": "staticwebassets\\images\\01db3bf6-6d19-4ff3-8929-36f614e1dd29.png"
     },
     {
+      "Id": "C:\\Users\\PC\\source\\repos\\web-net\\Book_Store\\wwwroot\\images\\author\\khaled-hosseini.png",
+      "PackagePath": "staticwebassets\\images\\author\\khaled-hosseini.png"
+    },
+    {
       "Id": "C:\\Users\\PC\\source\\repos\\web-net\\Book_Store\\wwwroot\\images\\author\\kishimoto-masashi.png",
       "PackagePath": "staticwebassets\\images\\author\\kishimoto-masashi.png"
     },
     {
+      "Id": "C:\\Users\\PC\\source\\repos\\web-net\\Book_Store\\wwwroot\\images\\author\\nguyen-nhat-anh.png",
+      "PackagePath": "staticwebassets\\images\\author\\nguyen-nhat-anh.png"
+    },
+    {
       "Id": "C:\\Users\\PC\\source\\repos\\web-net\\Book_Store\\wwwroot\\images\\author\\oda-eiichiro.png",
       "PackagePath": "staticwebassets\\images\\author\\oda-eiichiro.png"
+    },
+    {
+      "Id": "C:\\Users\\PC\\source\\repos\\web-net\\Book_Store\\wwwroot\\images\\category\\kinh-te.jpg",
+      "PackagePath": "staticwebassets\\images\\category\\kinh-te.jpg"
+    },
+    {
+      "Id": "C:\\Users\\PC\\source\\repos\\web-net\\Book_Store\\wwwroot\\images\\face-id_1.gif",
+      "PackagePath": "staticwebassets\\images\\face-id_1.gif"
+    },
+    {
+      "Id": "C:\\Users\\PC\\source\\repos\\web-net\\Book_Store\\wwwroot\\images\\face2.jpg",
+      "PackagePath": "staticwebassets\\images\\face2.jpg"
+    },
+    {
+      "Id": "C:\\Users\\PC\\source\\repos\\web-net\\Book_Store\\wwwroot\\images\\faceid.jpg",
+      "PackagePath": "staticwebassets\\images\\faceid.jpg"
+    },
+    {
+      "Id": "C:\\Users\\PC\\source\\repos\\web-net\\Book_Store\\wwwroot\\images\\loading.gif",
+      "PackagePath": "staticwebassets\\images\\loading.gif"
+    },
+    {
+      "Id": "C:\\Users\\PC\\source\\repos\\web-net\\Book_Store\\wwwroot\\images\\loading2.gif",
+      "PackagePath": "staticwebassets\\images\\loading2.gif"
     },
     {
       "Id": "C:\\Users\\PC\\source\\repos\\web-net\\Book_Store\\wwwroot\\images\\news\\loi-ich-cua-viec-doc-sach.jpg",
@@ -4737,12 +4769,24 @@
       "PackagePath": "staticwebassets\\images\\pages\\huong-dan-mua-hang.png"
     },
     {
+      "Id": "C:\\Users\\PC\\source\\repos\\web-net\\Book_Store\\wwwroot\\images\\products\\lieu-co-thuong-nhau-mai-2y.jpg",
+      "PackagePath": "staticwebassets\\images\\products\\lieu-co-thuong-nhau-mai-2y.jpg"
+    },
+    {
       "Id": "C:\\Users\\PC\\source\\repos\\web-net\\Book_Store\\wwwroot\\images\\products\\lieu-co-thuong-nhau-mai.jpg",
       "PackagePath": "staticwebassets\\images\\products\\lieu-co-thuong-nhau-mai.jpg"
     },
     {
+      "Id": "C:\\Users\\PC\\source\\repos\\web-net\\Book_Store\\wwwroot\\images\\products\\lieu-co-thuong-nhau-mai1.jpg",
+      "PackagePath": "staticwebassets\\images\\products\\lieu-co-thuong-nhau-mai1.jpg"
+    },
+    {
       "Id": "C:\\Users\\PC\\source\\repos\\web-net\\Book_Store\\wwwroot\\images\\products\\naruto.jpg",
       "PackagePath": "staticwebassets\\images\\products\\naruto.jpg"
+    },
+    {
+      "Id": "C:\\Users\\PC\\source\\repos\\web-net\\Book_Store\\wwwroot\\images\\products\\nguoi-dua-dieu-tai-ban-2018.png",
+      "PackagePath": "staticwebassets\\images\\products\\nguoi-dua-dieu-tai-ban-2018.png"
     },
     {
       "Id": "C:\\Users\\PC\\source\\repos\\web-net\\Book_Store\\wwwroot\\images\\products\\one-pice.jpg",

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Book_Store.Models;
 
@@ -13,6 +14,7 @@ public partial class Post
 
     public string? Contents { get; set; }
 
+    [Required(ErrorMessage = "Bắt buộc nhập hình ảnh.")]
     public string? Thumb { get; set; }
 
     public bool Published { get; set; }

@@ -66,6 +66,7 @@
                         <div class="form-group col-md-4">
                             <label class="font-weight-semibold" for="productPrice">Discount</label>
                             <input type="text" class="form-control" asp-for="Discount">
+                            <span asp-validation-for="Discount" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="row">
@@ -84,6 +85,7 @@
                         <div class="form-group col-2">
                             <label class="font-weight-semibold" for="productName">Hàng tồn kho</label>
                             <input type="text" class="form-control" asp-for="UnitslnStock">
+                            <span asp-validation-for="UnitslnStock" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="form-group">

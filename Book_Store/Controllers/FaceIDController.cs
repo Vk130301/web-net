@@ -39,7 +39,7 @@ namespace Book_Store.Controllers
         [AllowAnonymous]
         [Route("FaceID.html", Name = "FaceID")]
         [Route("api/checkFaceID")]
-        public async Task<IActionResult> Login(string email, string imageData, string? returnUrl)
+        public async Task<IActionResult> Login(string email, string imageData, string? returnUrl,int failedAttempts)
         {
             var imageDataBytes = Convert.FromBase64String(imageData.Substring("data:image/png;base64,".Length));
             var face = new Face
@@ -49,6 +49,7 @@ namespace Book_Store.Controllers
 
             var existingFace = _context.Faces.FirstOrDefault(x => x.Email == email);
             var khachhang = _context.Customers.AsNoTracking().SingleOrDefault(x => x.Email.Trim() == email);
+         
 
 
             if (existingFace != null)
@@ -57,7 +58,7 @@ namespace Book_Store.Controllers
                 existingFace.CheckFaceImg = face.CheckFaceImg;
                 _context.SaveChanges();
                 string pythonPath = "C:/Users/PC/AppData/Local/Programs/Python/Python37/python.exe";
-                string pythonScript = "C:/AI/test1.py " + email;
+                string pythonScript = "C:/Users/PC/source/repos/web-net/AI/test1.py " + email;
 
                 // Configure the process start info
                 ProcessStartInfo startInfo = new ProcessStartInfo();
@@ -100,9 +101,23 @@ namespace Book_Store.Controllers
                 }
                 else
                 {
-                    return Json(new { success = true, url = Url.RouteUrl("DangNhap") });
+                    failedAttempts++;
 
+                    if (failedAttempts < 3)
+                    {
+                        var re = 3 - failedAttempts;
+                        // Allow the user to retry face recognition
+                        _toastNotification.AddErrorToastMessage("Nhận diện không đúng. Số lần thử còn lại là " + re + " lần!");
+                        return Json(new { success = true, url = Url.RouteUrl("FaceID") });
+                    }
+                    else
+                    {
+                        // Redirect the user to the login page
+                        _toastNotification.AddErrorToastMessage("Nhận diện không đúng. Vui lòng đăng nhập bằng phương thức khác.");
+                        return Json(new { success = true, url = Url.RouteUrl("DangNhap") });
+                    }
                 }
+
                 // Tiến hành đăng nhập thành công
                 // Chuyển hướng đến action "Dashboard" của controller "Account"
 
@@ -112,8 +127,8 @@ namespace Book_Store.Controllers
                 // Không tìm thấy đối tượng Face với email trùng khớp
                 // Xử lý logic khi đăng nhập không thành công
                 // Ví dụ: Hiển thị thông báo lỗi và chuyển hướng về trang đăng nhập
-                _toastNotification.AddSuccessToastMessage("Đăng nhập thành công");
-                return Json(new { success = false, message = "Email không hợp lệ" });
+                _toastNotification.AddErrorToastMessage("Nhận diện không đúng");
+                return Json(new { success = true, url = Url.RouteUrl("DangNhap") });
             }
         }
 
@@ -123,8 +138,8 @@ namespace Book_Store.Controllers
         {
             return View();
         }
-
         [HttpPost]
+        [Route("api/checkRegisterFaceID")]
         public IActionResult RegisterSaveImage(string imageData)
         {
             var imageDataBytes = Convert.FromBase64String(imageData.Substring("data:image/png;base64,".Length));
@@ -134,17 +149,28 @@ namespace Book_Store.Controllers
 
             if (customer != null)
             {
-                var face = new Face
-                {
-                    FaceImg = imageDataBytes,
-                    Email = customer.Email
-                };
+                var existingFace = _context.Faces.SingleOrDefault(x => x.Email == customer.Email);
 
-                _context.Faces.Add(face);
+                if (existingFace != null)
+                {
+                    existingFace.FaceImg = imageDataBytes;
+                    _context.Faces.Update(existingFace);
+                }
+                else
+                {
+                    var newFace = new Face
+                    {
+                        FaceImg = imageDataBytes,
+                        Email = customer.Email
+                    };
+                    _context.Faces.Add(newFace);
+                }
+                _toastNotification.AddSuccessToastMessage("Đăng Ký Thành Công");
                 _context.SaveChanges();
+
             }
 
-            return Ok();
+            return Json(new { success = true, url = Url.Action("Dashboard", "Accounts") });
         }
 
     }

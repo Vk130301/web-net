@@ -2,15 +2,28 @@
 
 @{ ViewData["Title"] = "Đăng nhập tài khoản";
                 Layout = "~/Views/Shared/_Layout.cshtml"; }
+<style>
+    .password-toggle-icon {
+        position: absolute;
+        right: 10px;
+        top: 35%;
+        transform: translateY(-50%);
+        cursor: pointer;
+    }
 
+    .img-icon-faceid:hover{
+        transform: scale(1.07)
+    }
+</style>
 <main class="main-content">
     <div class="login-register-area section-space-y-axis-100">
         <div class="container">
             <div class="row">
-                <div class="col-lg-6 pt-10 pt-lg-0">
+                <div class="col-4"></div>
+                <div class="col-lg-4 pt-10 pt-lg-0">
                     <form method="post">
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                        <div class="login-form">
+                        <div style="width:380px;" class="login-form">
                             <h4 class="login-title">Đăng nhập</h4>
                             <div class="row">
                                 <div class="col-md-12">
@@ -20,21 +33,29 @@
                                 </div>
                                 <div class="col-md-12">
                                     <label>Mật khẩu</label>
-                                    <input type="password" asp-for="Password" placeholder="Mật khẩu">
+                                    <div style="position:relative;" class="password-input-container">
+                                        <input type="password" asp-for="Password" placeholder="Mật khẩu" class="password-input">
+                                        <span class="password-toggle-icon">
+                                            <i class="fa fa-eye" id="password-toggle"></i>
+                                        </span>
+                                    </div>
                                     <span asp-validation-for="Password" class="text-danger"></span>
                                 </div>
                                 
-                                <div class="col-12">
+                                <div class="col-6">
                                     <button class="btn btn-custom-size lg-size btn-secondary btn-primary-hover rounded-0">Đăng nhập</button>
                                 </div>
+                                <div class="col-6 text-center"><a href="/faceid.html"><img class="img-icon-faceid" style="border:1px solid #bac34e;border-radius:3px;" width="50" height="50" src="~/images/face2.jpg" /></a></div>
                                 <div style="margin-top:10px">
-                                    Bạn chưa có tài khoản? Đăng ký <a style="margin-top:5px; border-bottom: 1px solid black" href="https://localhost:44379/dang-ky.html">tại đây!</a>
+                                    Bạn chưa có tài khoản? Đăng ký <a style="margin-top:5px; border-bottom: 1px solid black" href="/dang-ky.html">tại đây!</a>
 
                                 </div>
                             </div>
                         </div>
                     </form>
                 </div>
+                <div class="col-4"></div>
+
             </div>
         </div>
     </div>
@@ -42,7 +63,20 @@
 @section Scripts{
     <script>
         $(document).ready(function () {
+            $('#password-toggle').click(function () {
+                var passwordInput = $('.password-input');
+                var passwordToggle = $('#password-toggle');
 
+                if (passwordInput.attr('type') === 'password') {
+                    passwordInput.attr('type', 'text');
+                    passwordToggle.removeClass('fa-eye');
+                    passwordToggle.addClass('fa-eye-slash');
+                } else {
+                    passwordInput.attr('type', 'password');
+                    passwordToggle.removeClass('fa-eye-slash');
+                    passwordToggle.addClass('fa-eye');
+                }
+            });
             function loadHeaderCart() {
                 $('#miniCart').load("/AjaxContent/HeaderCart");
                 $('#numberCart').load("/AjaxContent/NumberCart");
