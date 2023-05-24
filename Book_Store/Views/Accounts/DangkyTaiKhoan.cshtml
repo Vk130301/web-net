@@ -109,45 +109,89 @@
                     confirmPasswordToggle.addClass('fa-eye');
                 }
             });
+
             // Lắng nghe sự kiện khi người dùng nhấn nút đăng ký
-            $('form').on('submit', function (e) {
+            $('form').on('submit', function (event) {
                 event.preventDefault(); // Ngăn chặn form gửi yêu cầu đi
+
+                var fullName = $('input[name="FullName"]').val();
                 var email = $('input[name="Email"]').val();
+                var phone = $('input[name="Phone"]').val();
+                var password = $('input[name="Password"]').val();
+                var confirmPassword = $('input[name="ConfirmPassword"]').val();
                 var isValid = true;
+
+                // Kiểm tra họ và tên
+                if (fullName == '') {
+                    $('span[data-valmsg-for="FullName"]').text('Vui lòng nhập họ và tên.');
+                    isValid = false;
+                } else {
+                    $('span[data-valmsg-for="FullName"]').text('');
+                }
+
+                // Kiểm tra địa chỉ email
                 if (email == '') {
                     $('span[data-valmsg-for="Email"]').text('Vui lòng nhập địa chỉ email.');
                     isValid = false;
                 } else {
-                    $('span[data-valmsg-for="UserName"]').text('');
+                    $('span[data-valmsg-for="Email"]').text('');
                 }
-        
+
+                // Kiểm tra số điện thoại
+                if (phone == '') {
+                    $('span[data-valmsg-for="Phone"]').text('Vui lòng nhập số điện thoại.');
+                    isValid = false;
+                } else {
+                    $('span[data-valmsg-for="Phone"]').text('');
+                }
+
+                // Kiểm tra mật khẩu
+                if (password == '') {
+                    $('span[data-valmsg-for="Password"]').text('Vui lòng nhập mật khẩu.');
+                    isValid = false;
+                } else if (password.length < 6) {
+                    $('span[data-valmsg-for="Password"]').text('Mật khẩu phải có ít nhất 6 ký tự.');
+                    isValid = false;
+                } else {
+                    $('span[data-valmsg-for="Password"]').text('');
+                }
+
+                // Kiểm tra xác nhận mật khẩu
+                if (confirmPassword == '') {
+                    $('span[data-valmsg-for="ConfirmPassword"]').text('Vui lòng nhập lại mật khẩu.');
+                    isValid = false;
+                } else if (confirmPassword !== password) {
+                    $('span[data-valmsg-for="ConfirmPassword"]').text('Mật khẩu xác nhận không khớp.');
+                    isValid = false;
+                } else {
+                    $('span[data-valmsg-for="ConfirmPassword"]').text('');
+                }
+
                 if (isValid) {
-               
-                // Gửi yêu cầu kiểm tra email đến máy chủ
-                $.ajax({
-                    url: '/Accounts/ValidateEmail',
-                    type: 'POST',
-                    data: { Email: email },
-                    success: function (response) {
-                        if (response === true) {
-                            // Email hợp lệ, tiếp tục xử lý đăng ký
-                            $('form').submit(); // Submit form
-                        } else {
-                            // Hiển thị thông báo lỗi
-                            $('span[data-valmsg-for="Email"]').text('Email này đã được sử dụng');
-
+                    // Gửi yêu cầu kiểm tra email đến máy chủ
+                    $.ajax({
+                        url: '/Accounts/ValidateEmail',
+                        type: 'POST',
+                        data: { Email: email },
+                        success: function (response) {
+                            if (response === true) {
+                                // Email hợp lệ, tiếp tục xử lý đăng ký
+                                $('form').submit(); // Submit form
+                            } else {
+                                // Hiển thị thông báo lỗi
+                                $('span[data-valmsg-for="Email"]').text('Email này đã được sử dụng.');
+                            }
+                        },
+                        error: function () {
+                            // Xử lý lỗi
+                            $('span[data-valmsg-for="Email"]').text('Lỗi hệ thống.');
                         }
-                    },
-                    error: function () {
-                        // Xử lý lỗi
-                        $('span[data-valmsg-for="Email"]').text('Lỗi hệ thống');
-
-                    }
-                });
+                    });
                 }
             });
         })
     </script>
+
 
 }
 
