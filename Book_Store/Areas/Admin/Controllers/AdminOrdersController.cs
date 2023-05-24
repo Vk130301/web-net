@@ -42,7 +42,7 @@ namespace Book_Store.Areas.Admin.Controllers
             var pageSize = 20;
             var Orders = _context.Orders.Include(o => o.Customer).Include(o => o.TransactStatus)
                 .AsNoTracking()
-                .OrderBy(x => x.OrderDate).AsQueryable();
+                .OrderByDescending(x => x.OrderDate).AsQueryable();
 
             if (IsPaid == 1)
             {

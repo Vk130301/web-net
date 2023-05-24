@@ -127,8 +127,8 @@ namespace Book_Store.Controllers
                 // Không tìm thấy đối tượng Face với email trùng khớp
                 // Xử lý logic khi đăng nhập không thành công
                 // Ví dụ: Hiển thị thông báo lỗi và chuyển hướng về trang đăng nhập
-                _toastNotification.AddErrorToastMessage("Nhận diện không đúng");
-                return Json(new { success = true, url = Url.RouteUrl("DangNhap") });
+                _toastNotification.AddErrorToastMessage("Người dùng không tồn tại!");
+                return Json(new { success = true, url = Url.RouteUrl("FaceID") });
             }
         }
 

@@ -61,8 +61,14 @@
 
                                 <td>
                                     <a class="btn btn-primary btn-tone m-r-5" asp-area="Admin" asp-controller="AdminOrders" asp-action="Details" asp-route-id="@item.OrderId">View</a>
-                                    <a data-target="#modal-header" data-toggle="modal" class="btn btn-secondary btn-tone m-r-5" asp-area="Admin" asp-controller="AdminOrders" asp-action="ChangeStatus" asp-route-id="@item.OrderId">ChangeStatus</a>
-                                    <a class="btn btn-success btn-tone m-r-5" asp-area="Admin" asp-controller="AdminOrders" asp-action="Delete" asp-route-id="@item.OrderId">Delete</a>
+                                    @if (item.TransactStatus.Status == "Đã giao hàng thành công" || item.TransactStatus.Status == "Đã hủy" || item.TransactStatus.Status == "Trả hàng")
+                                    {
+                                        <a data-target="#modal-header" data-toggle="modal" class="btn btn-secondary btn-tone m-r-5 disabled" asp-area="Admin" asp-controller="AdminOrders" asp-action="ChangeStatus" asp-route-id="@item.OrderId">ChangeStatus</a>
+                                    }
+                                    else
+                                    {
+                                        <a data-target="#modal-header" data-toggle="modal" class="btn btn-secondary btn-tone m-r-5" asp-area="Admin" asp-controller="AdminOrders" asp-action="ChangeStatus" asp-route-id="@item.OrderId">ChangeStatus</a>
+                                    }
                                 </td>
                             </tr>
                         }
@@ -119,8 +125,7 @@
             // note that this will replace the content of modal-content ever time the modal is opened
             modal.find('.modal-content').load(url);
         });
+
     </script>
 
 }
-
-

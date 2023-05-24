@@ -50,13 +50,13 @@
                         <a href="/" class="header-logo">
                             <img style="width: 100px; height:100px" src="~/assets/images/logo/KERAS.jpg" alt="BOOK STORE">
                         </a>
-                        <div class="header-search-area d-none d-lg-block">
+@*                        <div class="header-search-area d-none d-lg-block">
                             <form class="header-searchbox">
                                 <input id="keyword" name="keyword" class="input-field" type="text" placeholder="Tìm kiếm sản phẩm">
                                 <button class="btn btn-outline-whisper btn-primary-hover" type="submit"><i class="pe-7s-search"></i></button>
                             </form>
 
-                        </div>
+                        </div>*@
 
 
                         @*<div>
@@ -72,58 +72,57 @@
                         </table>
                         </div>*@
 
+                        <div class="header-right">
+                            <ul>
+                                <li class="dropdown d-none d-md-block">
+                                    <button class="btn btn-link dropdown-toggle ht-btn p-0" type="button" id="settingButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="pe-7s-users"></i>
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="settingButton">
+                                        @if (User.Identity.IsAuthenticated)
+                                        {
+                                            <li><a class="dropdown-item" href="/tai-khoan-cua-toi.html">Tài khoản của tôi</a></li>
+                                            <li><a class="dropdown-item" href="/RegisterFaceID.html">Đăng ký nhận diện FaceID</a></li>
+                                            <li><a class="dropdown-item" href="dang-xuat.html">Đăng xuất</a></li>
+                                        }
+                                        else
+                                        {
+                                            <li><a class="dropdown-item" href="/dang-ky.html">Đăng ký tài khoản</a></li>
+                                            <li><a class="dropdown-item" href="/dang-nhap.html">Đăng nhập</a></li>
 
 
-
-
-
-                    </div>
-                    <div class="header-right">
-                        <ul>
-                            <li class="dropdown d-none d-md-block">
-                                <button class="btn btn-link dropdown-toggle ht-btn p-0" type="button" id="settingButton" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="pe-7s-users"></i>
-                                </button>
-                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="settingButton">
-                                    @if (User.Identity.IsAuthenticated)
-                                    {
-                                        <li><a class="dropdown-item" href="/tai-khoan-cua-toi.html">Tài khoản của tôi</a></li>
-                                        <li><a class="dropdown-item" href="/RegisterFaceID.html">Đăng ký nhận diện FaceID</a></li>
-                                        <li><a class="dropdown-item" href="dang-xuat.html">Đăng xuất</a></li>
-                                    }
-                                    else
-                                    {
-                                        <li><a class="dropdown-item" href="/dang-ky.html">Đăng ký tài khoản</a></li>
-                                        <li><a class="dropdown-item" href="/dang-nhap.html">Đăng nhập</a></li>
-                                       
-
-                                    }
-                                </ul>
-                            </li>
-                            <li class="d-none d-md-block">
+                                        }
+                                    </ul>
+                                </li>
+                                @*                            <li class="d-none d-md-block">
                                 <a href="#">
-                                    <i class="pe-7s-like"></i>
+                                <i class="pe-7s-like"></i>
                                 </a>
-                            </li>
-                            <li class="d-block d-lg-none">
+                                </li>
+                                <li class="d-block d-lg-none">
                                 <a href="#" class="search-btn toolbar-btn">
-                                    <i class="pe-7s-search"></i>
+                                <i class="pe-7s-search"></i>
                                 </a>
-                            </li>
-                            <li id="numberCart" class="minicart-wrap me-3 me-lg-0">
-                                @await Component.InvokeAsync("NumberCart")
-                            </li>
-                            <li class="mobile-menu_wrap d-block d-lg-none">
-                                <a href="#mobileMenu" class="mobile-menu_btn toolbar-btn pl-0">
-                                    <i class="pe-7s-menu"></i>
-                                </a>
-                            </li>
-                        </ul>
+                                </li>*@
+                                <li id="numberCart" class="minicart-wrap me-3 me-lg-0">
+                                    @await Component.InvokeAsync("NumberCart")
+                                </li>
+                                <li class="mobile-menu_wrap d-block d-lg-none">
+                                    <a href="#mobileMenu" class="mobile-menu_btn toolbar-btn pl-0">
+                                        <i class="pe-7s-menu"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+
+
+
+
                     </div>
+                   
                 </div>
             </div>
         </div>
-    </div>
     </div>
     <div class="main-header header-sticky" data-bg-color="#bac34e">
         <div class="container">
@@ -480,26 +479,3 @@
     <div class="global-overlay"></div>
 </header>
 
-@section Scripts{
-    @*<script>*@
-    @*$(document).ready(function () {
-            $("#keyword").keyup(function () {
-            var strkeyword = $('#keyword').val();
-            $.ajax({
-                url: '/Search/FindProduct/',
-                datatype: "json",
-                type: "POST",
-                data: { keyword: strkeyword },
-                async: true,
-                success: function (results) {
-                    $("#records_table").html("");
-                    $("#records_table").html(results);
-                },
-                error: function (xhr) {
-                    alert('error');
-                }
-            });
-        });
-        });*@
-
-}

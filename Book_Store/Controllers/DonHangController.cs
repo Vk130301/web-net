@@ -58,5 +58,39 @@ namespace Book_Store.Controllers
                 return NotFound();
             }
         }
+        [HttpPost]
+        public async Task<ActionResult> HuyDonHang(int id)
+        {
+            // Lấy đơn hàng từ cơ sở dữ liệu dựa trên mã đơn hàng (id)
+            var donHang = _context.Orders.Find(id);
+
+            if (donHang != null)
+            {
+                // Cập nhật trạng thái của đơn hàng thành "Đã hủy"
+                donHang.TransactStatusId = 4;
+                var orderDetails = await _context.OrderDetails.Where(od => od.OrderId == id).ToListAsync();
+                foreach (var detail in orderDetails)
+                {
+                    // Lấy sản phẩm từ chi tiết đơn hàng
+                    var product = await _context.Products.FindAsync(detail.ProductId);
+
+                    // Cập nhật tồn kho của sản phẩm
+                    product.UnitslnStock += detail.Amount;
+
+                    _context.Products.Update(product);
+                }
+
+                await _context.SaveChangesAsync();
+
+                // Lưu thay đổi vào cơ sở dữ liệu
+                _context.SaveChanges();
+                _toastNotification.AddSuccessToastMessage("Đã Hủy Đơn Hàng Thành Công");
+
+                return Json(new { success = true });
+            }
+
+            return Json(new { success = false, message = "Không tìm thấy đơn hàng." });
+        }
+
     }
 }

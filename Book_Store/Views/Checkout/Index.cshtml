@@ -130,43 +130,9 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="card">
-                                            <div class="card-header" id="#payment-2">
-                                                <h5 class="panel-title">
-                                                    <a href="javascript:void(0)" class="collapsed" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false">
-                                                        Chuyển khoản qua ngân hàng
-                                                    </a>
-                                                </h5>
-                                            </div>
-                                            <div id="collapseTwo" class="collapse" data-bs-parent="#accordion">
-                                                <div class="card-body">
-                                                    <p>
-                                                        Thông tin tài khoản ngân hàng
-                                                    </p>
-                                                    <p>Chủ tài khoản: Dương Phương Duy</p>
-                                                    <p>Số tài khoản: 0963102916 - Ngân hàng VietcomBank</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="card">
-                                            <div class="card-header" id="#payment-3">
-                                                <h5 class="panel-title">
-                                                    <a href="javascript:void(0)" class="collapsed" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false">
-                                                        Thanh toán qua MOMO
-                                                    </a>
-                                                </h5>
-                                            </div>
-                                            <div id="collapseThree" class="collapse" data-bs-parent="#accordion">
-                                                <div class="card-body">
-                                                    <p>Thông tin MOMO</p>
-                                                    <p>Chủ tài khoản: Dương Phương Duy</p>
-                                                    <p>Số điện thoại: 0963102916</p>
-
-                                                </div>
-                                            </div>
-                                        </div>
                                     </div>
                                     <div id="customerId" data-customer-id="@User.FindFirst("CustomerId")?.Value"></div>
+                                    <div id="paypal-btn">Thanh Toán Bằng PayPal</div>
                                     <div class="order-button-payment">
                                         <input class="removelocal" value="XÁC NHẬN ĐẶT HÀNG" type="submit">
                                     </div>
@@ -181,6 +147,7 @@
     </div>
 </main>
 @section Scripts{
+    <script src="https://www.paypalobjects.com/api/checkout.js"></script>
     <script>
         $(function () {
             $(".removelocal").click(function () {
@@ -200,5 +167,39 @@
                 });
             });
         });
+        let _total = @Html.Raw(Carts.Sum(x => x.TotalMoney)) 
+            let _toalUSD = _total/23000;
+        console.log(_toalUSD);
+        paypal.Button.render({
+            env: 'sandbox',
+            client : {
+                sandbox: 'AY8SNhDiPrqR7rYznLIcC28GEWuT52foMeEgOUjGRMHDO0CfwtPl-1VkwpVH0o7g2UVIwgZ1QEa6RjRi'
+            },
+            locale: "en_VN",
+            style: {
+                size: 'small',
+                color: 'gold',
+                shape: 'pill'
+            },
+            commit: true,
+            payment: function (data, actions) {
+                return actions.payment.create({
+                    transactions: [{
+                        amount: {
+                            total: _toalUSD.toFixed(2),
+                            currency: 'USD'
+                        }
+                    }]
+                });
+            },
+            onAuthorize: function (data, actions) {
+                return actions.payment.execute().then(function () {
+                    var url = '@Url.Action("Success","Checkout", new {})';
+                    window.location.href = url
+                });
+            }
+        }, "#paypal-btn")
+
+
     </script>
 }

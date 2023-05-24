@@ -3905,6 +3905,10 @@
       "PackagePath": "staticwebassets\\assets\\images\\banner\\inner-img\\2-1-503x430.png"
     },
     {
+      "Id": "C:\\Users\\PC\\source\\repos\\web-net\\Book_Store\\wwwroot\\assets\\images\\banner\\inner-img\\Book.jfif",
+      "PackagePath": "staticwebassets\\assets\\images\\banner\\inner-img\\Book.jfif"
+    },
+    {
       "Id": "C:\\Users\\PC\\source\\repos\\web-net\\Book_Store\\wwwroot\\assets\\images\\blog\\banner\\1-1-370x400.jpg",
       "PackagePath": "staticwebassets\\assets\\images\\blog\\banner\\1-1-370x400.jpg"
     },
@@ -4741,6 +4745,10 @@
       "PackagePath": "staticwebassets\\images\\face2.jpg"
     },
     {
+      "Id": "C:\\Users\\PC\\source\\repos\\web-net\\Book_Store\\wwwroot\\images\\face_id2_effect_by_gleb.gif",
+      "PackagePath": "staticwebassets\\images\\face_id2_effect_by_gleb.gif"
+    },
+    {
       "Id": "C:\\Users\\PC\\source\\repos\\web-net\\Book_Store\\wwwroot\\images\\faceid.jpg",
       "PackagePath": "staticwebassets\\images\\faceid.jpg"
     },
@@ -4791,6 +4799,14 @@
     {
       "Id": "C:\\Users\\PC\\source\\repos\\web-net\\Book_Store\\wwwroot\\images\\products\\one-pice.jpg",
       "PackagePath": "staticwebassets\\images\\products\\one-pice.jpg"
+    },
+    {
+      "Id": "C:\\Users\\PC\\source\\repos\\web-net\\Book_Store\\wwwroot\\images\\products\\tam-ly-hoc-toi-pham.png",
+      "PackagePath": "staticwebassets\\images\\products\\tam-ly-hoc-toi-pham.png"
+    },
+    {
+      "Id": "C:\\Users\\PC\\source\\repos\\web-net\\Book_Store\\wwwroot\\images\\products\\thoat-khoi-tro-choi-chet-choc.png",
+      "PackagePath": "staticwebassets\\images\\products\\thoat-khoi-tro-choi-chet-choc.png"
     },
     {
       "Id": "C:\\Users\\PC\\source\\repos\\web-net\\Book_Store\\wwwroot\\js\\site.js",

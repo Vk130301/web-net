@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "dJSBC9pbmX18iWGfdGuwJ+B4iI0ffzfQXjOcz0zdW0c=",
+  "Hash": "KH59KQ/fSir+LDowrmzaVASkPnQPyTxKof+JBiHlNm4=",
   "Source": "Book_Store",
   "BasePath": "_content/Book_Store",
   "Mode": "Default",
@@ -16660,6 +16660,23 @@
       "OriginalItemSpec": "wwwroot\\assets\\images\\banner\\inner-img\\2-1-503x430.png"
     },
     {
+      "Identity": "C:\\Users\\PC\\source\\repos\\web-net\\Book_Store\\wwwroot\\assets\\images\\banner\\inner-img\\Book.jfif",
+      "SourceId": "Book_Store",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\PC\\source\\repos\\web-net\\Book_Store\\wwwroot\\",
+      "BasePath": "_content/Book_Store",
+      "RelativePath": "assets/images/banner/inner-img/Book.jfif",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\assets\\images\\banner\\inner-img\\Book.jfif"
+    },
+    {
       "Identity": "C:\\Users\\PC\\source\\repos\\web-net\\Book_Store\\wwwroot\\assets\\images\\blog\\banner\\1-1-370x400.jpg",
       "SourceId": "Book_Store",
       "SourceType": "Discovered",
@@ -20179,6 +20196,23 @@
       "OriginalItemSpec": "wwwroot\\images\\category\\kinh-te.jpg"
     },
     {
+      "Identity": "C:\\Users\\PC\\source\\repos\\web-net\\Book_Store\\wwwroot\\images\\face_id2_effect_by_gleb.gif",
+      "SourceId": "Book_Store",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\PC\\source\\repos\\web-net\\Book_Store\\wwwroot\\",
+      "BasePath": "_content/Book_Store",
+      "RelativePath": "images/face_id2_effect_by_gleb.gif",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\face_id2_effect_by_gleb.gif"
+    },
+    {
       "Identity": "C:\\Users\\PC\\source\\repos\\web-net\\Book_Store\\wwwroot\\images\\face2.jpg",
       "SourceId": "Book_Store",
       "SourceType": "Discovered",
@@ -20432,6 +20466,40 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\images\\products\\one-pice.jpg"
+    },
+    {
+      "Identity": "C:\\Users\\PC\\source\\repos\\web-net\\Book_Store\\wwwroot\\images\\products\\tam-ly-hoc-toi-pham.png",
+      "SourceId": "Book_Store",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\PC\\source\\repos\\web-net\\Book_Store\\wwwroot\\",
+      "BasePath": "_content/Book_Store",
+      "RelativePath": "images/products/tam-ly-hoc-toi-pham.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\products\\tam-ly-hoc-toi-pham.png"
+    },
+    {
+      "Identity": "C:\\Users\\PC\\source\\repos\\web-net\\Book_Store\\wwwroot\\images\\products\\thoat-khoi-tro-choi-chet-choc.png",
+      "SourceId": "Book_Store",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\PC\\source\\repos\\web-net\\Book_Store\\wwwroot\\",
+      "BasePath": "_content/Book_Store",
+      "RelativePath": "images/products/thoat-khoi-tro-choi-chet-choc.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\products\\thoat-khoi-tro-choi-chet-choc.png"
     },
     {
       "Identity": "C:\\Users\\PC\\source\\repos\\web-net\\Book_Store\\wwwroot\\js\\site.js",

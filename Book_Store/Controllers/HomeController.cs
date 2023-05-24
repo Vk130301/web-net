@@ -43,7 +43,7 @@ namespace Book_Store.Controllers
             {
                 ProductHomeVM productHome = new ProductHomeVM();
                 productHome.category = item;
-                productHome.lsProducts = lsProducts.Where(x => x.CateId == item.CateId).ToList();
+                productHome.lsProducts = lsProducts.Where(x => x.CateId == item.CateId).Take(4).ToList();
                 lsProductViews.Add(productHome);
 
                 var TinTuc = _context.Posts

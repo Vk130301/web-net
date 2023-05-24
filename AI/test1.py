@@ -5,6 +5,7 @@ import cv2
 import numpy as np
 from tensorflow.keras.models import load_model
 model =load_model("C:/Users/PC/source/repos/web-net/AI/facenet_keras.h5")
+face_cascade = cv2.CascadeClassifier('C:/Users/PC/source/repos/web-net/AI/haarcascade_frontalface_alt2.xml')
 
 conn = pyodbc.connect(
     'DRIVER={SQL SERVER};'
@@ -16,18 +17,16 @@ cursor = conn.cursor()
 user = str(sys.argv[1])
 
 def img_to_encoding(path, model):
-         # Đọc ảnh và chuyển đổi từ BGR sang RGB
-        img1 = cv2.imread(path, 1)
-        img = img1[...,::-1]
-        dim = (160, 160)
-        # Resize ảnh thành kích thước 160x160 nếu cần
-        if(img.shape != (160, 160, 3)):
-            img = cv2.resize(img, dim, interpolation = cv2.INTER_AREA)
-        # Chuẩn bị dữ liệu đầu vào cho mô hình facenet
-        x_train = np.array([img])
-        # Trích xuất vector biểu diễn khuôn mặt
-        embedding = model.predict(x_train)
-        return embedding
+       img1 = cv2.imread(path, 1)
+       gray = cv2.cvtColor(img1, cv2.COLOR_BGR2GRAY)
+       faces = face_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30))
+       for (x, y, w, h) in faces:
+       # Cắt ảnh khuôn mặt từ ảnh gốc
+            face_image = img1[y:y+h, x:x+w]
+            resized_face = cv2.resize(face_image, (160, 160), interpolation=cv2.INTER_AREA)
+       x_train = np.array([resized_face])
+       embedding = model.predict(x_train)
+       return embedding
 class FaceID():
     def __init__(self, email, model):
         self.email = email
